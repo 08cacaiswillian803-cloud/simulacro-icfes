@@ -1,0 +1,391 @@
+/* ========================= */
+/* 🌐 BODY */
+/* ========================= */
+body{
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    display:flex;
+    margin:0;
+    min-height:100vh;
+    color:#111;
+}
+/* ========================= */
+/* 🔐 LOGIN */
+/* ========================= */
+
+#auth{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#f8fafc;
+
+    display:flex; /* 👈 IMPORTANTE: visible por defecto */
+
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+#auth.hidden{
+    display:none; /* 👈 lo ocultamos con clase, no directo */
+}
+
+#auth-box{
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    width:300px;
+    text-align:center;
+}
+
+#auth-box input{
+    width:100%;
+    margin:10px 0;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+
+#auth-box button{
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#4f46e5;
+    color:white;
+    cursor:pointer;
+}
+
+#auth-box button:hover{
+    background:#4338ca;
+}
+#sidebar{
+    width:180px;
+    background:white;
+    padding:20px;
+    box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    /* Clase para resaltar el botón del módulo activo */
+.btn-active {
+    background: #4f46e5 !important;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+}
+}
+
+#sidebar button{
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#e0e7ff;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+#sidebar button:hover{
+    background:#c7d2fe;
+}
+
+/* ========================= */
+/* 📦 CONTENEDOR PRINCIPAL */
+/* ========================= */
+#app{
+    background:white;
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    animation:fadeIn 0.5s ease;
+}
+
+/* ========================= */
+/* 🧠 CONTENIDO */
+/* ========================= */
+#contenido{
+    width:100%;
+}
+
+/* ========================= */
+/* 🔤 TITULOS */
+/* ========================= */
+h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#4f46e5;
+}
+
+h3{
+    color:#374151;
+}
+
+/* ========================= */
+/* 📚 MODULOS */
+/* ========================= */
+.modulo{
+    border-top:2px solid #e5e7eb;
+    padding-top:20px;
+    margin-top:20px;
+    animation:fadeIn 0.3s ease;
+}
+
+/* ========================= */
+/* 🎯 MENU SIMULACRO */
+/* ========================= */
+#menu{
+    text-align:center;
+}
+
+#menu button{
+    margin:8px;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#4f46e5;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+#menu button:hover{
+    background:#4338ca;
+    transform:scale(1.05);
+}
+
+/* ========================= */
+/* 📝 ENUNCIADO */
+/* ========================= */
+#enunciado{
+    font-size:18px;
+    margin:20px 0;
+    line-height:1.6;
+    color:#111827;
+}
+
+/* ========================= */
+/* 🔘 OPCIONES */
+/* ========================= */
+.opcion{
+    display:block;
+    width:100%;
+    margin:10px 0;
+    padding:15px;
+    border:2px solid #e5e7eb;
+    border-radius:10px;
+    cursor:pointer;
+    background:white;
+    text-align:left;
+    font-size:16px;
+    transition:0.2s;
+     touch-action: manipulation;
+}
+
+.opcion:hover{
+    background:#f9fafb;
+    transform:scale(1.02);
+}
+
+/* ========================= */
+/* ✅ ESTADOS */
+/* ========================= */
+.selected{
+    border-color:#4f46e5;
+    background:#eef2ff;
+}
+
+.correcta{
+    border-color:#22c55e;
+    background:#dcfce7;
+}
+
+.incorrecta{
+    border-color:#ef4444;
+    background:#fee2e2;
+}
+
+/* ========================= */
+/* ▶ BOTON SIGUIENTE */
+/* ========================= */
+#btn{
+    padding:15px;
+    margin-top:20px;
+    width:100%;
+    background:#4f46e5;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+#btn:hover{
+    background:#4338ca;
+}
+
+/* ========================= */
+/* ⏱ STATS */
+/* ========================= */
+#stats, #tiempo{
+    text-align:center;
+    font-weight:bold;
+    margin:10px 0;
+    color:#374151;
+}
+
+/* ========================= */
+/* ✨ ANIMACION */
+/* ========================= */
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+/* ========================= */
+/* 🔄 BOTONES DE RESULTADO */
+/* ========================= */
+.btn-final {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    margin-top: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Botón principal (Reintentar) */
+.btn-reintentar {
+    background: #4f46e5;
+    color: white;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.btn-reintentar:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+}
+
+/* Botón secundario (Otras áreas) */
+.btn-volver {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+.btn-volver:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+.resultado-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.puntaje-circulo {
+    font-size: 50px;
+    font-weight: 800;
+    color: #4f46e5;
+    margin: 15px 0;
+}
+/* ========================= */
+/* 📱 MODO MOVIL */
+/* ========================= */
+@media (max-width: 768px){
+
+/* Layout vertical */
+body{
+    flex-direction: column;
+}
+
+/* Sidebar arriba tipo barra */
+#sidebar{
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+    gap: 8px;
+}
+
+/* Botones del sidebar más pequeños */
+#sidebar button{
+    flex: 1;
+    min-width: 120px;
+    font-size: 14px;
+    padding: 10px;
+}
+
+/* Contenedor principal */
+#app{
+    margin: 0;
+    border-radius: 0;
+    padding: 20px;
+}
+
+/* Texto más compacto */
+h2{
+    font-size: 20px;
+}
+
+h3{
+    font-size: 18px;
+}
+
+/* Botones de áreas */
+#menu button{
+    width: 100%;
+    margin: 8px 0;
+}
+
+/* Opciones tipo examen (MUY IMPORTANTE) */
+.opcion{
+    font-size: 15px;
+    padding: 14px;
+}
+
+/* Botón siguiente grande */
+#btn{
+    font-size: 18px;
+    padding: 16px;
+}
+
+/* Resultado */
+.botones-resultado{
+    flex-direction: column;
+}
+
+/* Botones grandes para dedo */
+.btn-final{
+    width: 100%;
+    font-size: 16px;
+    padding: 16px;
+}
+
+/* Scroll para preguntas largas */
+#contenido{
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+}

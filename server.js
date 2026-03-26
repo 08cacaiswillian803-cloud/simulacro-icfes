@@ -1,0 +1,227 @@
+const express = require('express');
+const mysql = require('mysql2');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(__dirname));
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'simulacro_icfes'
+});
+
+db.connect(err => {
+    if (err) {
+        console.error("❌ Error conectando a MySQL:", err);
+        return;
+    }
+    console.log("✅ Conectado a MySQL");
+});
+
+// ============================
+// 1. OBTENER PREGUNTAS
+// ============================
+app.get('/api/preguntas', (req, res) => {
+    let area = parseInt(req.query.area);
+    if (!area) area = 1;
+
+    const sql = `
+        SELECT 
+            id_pregunta, 
+            enunciado, 
+            url_imagen, 
+            opcion_a, 
+            opcion_b, 
+            opcion_c, 
+            opcion_d, 
+            respuesta_correcta 
+        FROM preguntas 
+        WHERE id_area = ? 
+        ORDER BY RAND() 
+        LIMIT 50
+    `;
+
+    db.query(sql, [area], (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Error en consulta" });
+        }
+        res.json(results);
+    });
+});
+
+// ============================
+// 2. GUARDAR RESULTADO
+// ============================
+app.post('/api/guardar-intento', (req, res) => {
+    const { puntaje, total, id_usuario, id_area } = req.body;
+
+    const sql = `
+        INSERT INTO intentos_simulacro 
+        (puntaje_obtenido, total_preguntas, id_usuario, id_area) 
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(sql, [puntaje, total, id_usuario, id_area], (err, result) => {
+        if (err) {
+            console.log("Error guardando intento", err);
+            return res.status(500).json({ error: "Error guardando intento" });
+        }
+        res.json({ status: "ok", id_intento: result.insertId });
+    });
+});
+
+// ============================
+// 3. RANKING
+// ============================
+app.get('/api/ranking', (req, res) => {
+    const sql = `
+        SELECT 
+            u.nombre, 
+            MAX(i.puntaje_obtenido) as mejor_puntaje, 
+            a.nombre_area
+        FROM intentos_simulacro i
+        JOIN usuarios u ON i.id_usuario = u.id_usuario
+        JOIN areas a ON i.id_area = a.id_area
+        GROUP BY u.id_usuario, a.id_area
+        ORDER BY mejor_puntaje DESC
+        LIMIT 10
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
+// ============================
+// 4. LOGIN
+// ============================
+app.post('/api/login', (req, res) => {
+    const { correo, password } = req.body;
+    const sql = 'SELECT id_usuario, nombre FROM usuarios WHERE correo = ? AND password = ?';
+
+    db.query(sql, [correo, password], (err, results) => {
+        if (err || results.length === 0) {
+            return res.status(401).json({ error: "Credenciales incorrectas" });
+        }
+        res.json(results[0]);
+    });
+});
+
+// ============================
+// 5. REGISTRO
+// ============================
+app.post('/api/registro', (req, res) => {
+
+    const { nombre, correo, password } = req.body;
+
+    if (!nombre || !correo || !password) {
+        return res.json({ error: "Faltan datos" });
+    }
+
+    const checkSql = "SELECT * FROM usuarios WHERE correo = ?";
+
+    db.query(checkSql, [correo], (err, results) => {
+
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Error en verificación" });
+        }
+
+        if (results.length > 0) {
+            return res.json({ error: "El correo ya está registrado" });
+        }
+
+        const insertSql = `
+            INSERT INTO usuarios (nombre, correo, password)
+            VALUES (?, ?, ?)
+        `;
+
+        db.query(insertSql, [nombre, correo, password], (err, result) => {
+
+            if (err) {
+                console.log("Error insertando usuario:", err);
+                return res.status(500).json({ error: "Error registrando usuario" });
+            }
+
+            res.json({ status: "ok" });
+
+        });
+
+    });
+
+});
+
+// ============================
+// 6. VALIDAR RESPUESTA
+// ============================
+app.get('/api/validar/:id/:respuesta', (req, res) => {
+    const { id, respuesta } = req.params;
+    const sql = `SELECT respuesta_correcta FROM preguntas WHERE id_pregunta = ?`;
+    db.query(sql, [id], (err, result) => {
+        if (err || result.length === 0) return res.status(500).json({ error: "Error" });
+        const correcta = result[0].respuesta_correcta.trim().toUpperCase();
+        res.json({ correcta: correcta === respuesta.trim().toUpperCase() });
+    });
+});
+// ============================
+// 7. HISTORIAL POR USUARIO
+// ============================
+app.get('/api/historial/:id', (req, res) => {
+
+    const id = req.params.id;
+
+    const sql = `
+        SELECT *
+        FROM intentos_simulacro
+        WHERE id_usuario = ?
+        ORDER BY fecha DESC
+    `;
+
+    db.query(sql, [id], (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Error obteniendo historial" });
+        }
+        res.json(results);
+    });
+
+});
+// ============================
+// 8. PERFIL USUARIO
+// ============================
+app.get('/api/perfil/:id', (req, res) => {
+
+    const id = req.params.id;
+
+    const sql = `
+        SELECT 
+            u.nombre,
+            u.correo,
+            COUNT(i.id_intento) as intentos,
+            MAX(i.puntaje_obtenido) as mejor
+        FROM usuarios u
+        LEFT JOIN intentos_simulacro i 
+        ON u.id_usuario = i.id_usuario
+        WHERE u.id_usuario = ?
+    `;
+
+    db.query(sql, [id], (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Error obteniendo perfil" });
+        }
+        res.json(results[0]);
+    });
+
+});
+app.listen(3000, () => {
+    console.log("🚀 Servidor corriendo en http://localhost:3000");
+});
