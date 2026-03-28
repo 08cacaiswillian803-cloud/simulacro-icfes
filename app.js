@@ -134,59 +134,51 @@ console.log(e)
 // RENDER
 // =======================
 function render(){
+    const p = preguntas[index]
 
-const p = preguntas[index]
+    // Asegúrate de que estos elementos sean visibles (por si vienen de un resultado anterior)
+    document.getElementById("enunciado").style.display = "block"
+    document.getElementById("opciones").style.display = "block"
 
-document.getElementById("stats").innerText =
-`Pregunta ${index+1} de ${preguntas.length}`
+    document.getElementById("stats").innerText = 
+    `Pregunta ${index+1} de ${preguntas.length}`
 
-document.getElementById("enunciado").innerHTML = p.enunciado
+    // Renderizamos el enunciado (que ya trae el <img src="..."> de la DB)
+    document.getElementById("enunciado").innerHTML = p.enunciado
 
-const cont = document.getElementById("opciones")
-cont.innerHTML = ""
+    const cont = document.getElementById("opciones")
+    cont.innerHTML = ""
 
-document.getElementById("btn").style.display="none"
+    document.getElementById("btn").style.display="none"
+    seleccion = null
 
-seleccion = null
+    const opciones = [p.opcion_a, p.opcion_b, p.opcion_c, p.opcion_d]
 
-const opciones = [p.opcion_a,p.opcion_b,p.opcion_c,p.opcion_d]
+    opciones.forEach((texto, i) => {
+        const letra = ["A", "B", "C", "D"][i]
+        const btn = document.createElement("button")
+        btn.className = "opcion"
+        // También usamos innerHTML aquí por si las opciones tienen fórmulas o formato
+        btn.innerHTML = `${letra}. ${texto}`
 
-opciones.forEach((texto,i)=>{
+        btn.onclick = () => {
+            if (seleccion) return
+            document.querySelectorAll(".opcion").forEach(o => o.classList.remove("selected"))
+            btn.classList.add("selected")
+            seleccion = letra
+            document.getElementById("btn").style.display = "block"
 
-const letra = ["A","B","C","D"][i]
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth"
+            })
+        }
+        cont.appendChild(btn)
+    })
 
-const btn = document.createElement("button")
-btn.className="opcion"
-btn.innerHTML = `${letra}. ${texto}`
-
-btn.onclick = ()=>{
-
-// 🔒 evitar cambiar respuesta
-if(seleccion) return
-
-document.querySelectorAll(".opcion")
-.forEach(o=>o.classList.remove("selected"))
-
-btn.classList.add("selected")
-
-seleccion = letra
-
-document.getElementById("btn").style.display="block"
-
-// 📱 SCROLL AUTOMÁTICO (IMPORTANTE)
-window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
-})
-
-}
-
-cont.appendChild(btn)
-
-})
-
-MathJax.typesetPromise()
-
+    if (window.MathJax) {
+        MathJax.typesetPromise()
+    }
 }
 
 
