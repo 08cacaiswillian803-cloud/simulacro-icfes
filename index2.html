@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Simulacro ICFES</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+window.MathJax = {
+tex: {
+inlineMath: [['$', '$']]
+}
+};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- 🔐 LOGIN -->
+<div id="auth">
+
+    <div id="auth-box">
+
+        <h2>Simulacro ICFES</h2>
+
+        <input type="text" id="nombre" placeholder="Nombre de usuario">
+        <input type="email" id="correo" placeholder="Correo">
+        <input type="password" id="password" placeholder="Contraseña">
+
+        <!-- 🔥 CAMBIO AQUÍ -->
+        <button onclick="Usuario.login().then(u => app.usuario = u)">
+            Iniciar sesión
+        </button>
+
+        <button onclick="registro()">Registrarse</button>
+
+        <p id="auth-msg"></p>
+
+    </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+    <button onclick="UI.mostrarModulo('inicio')">Inicio</button>
+    <button onclick="UI.mostrarModulo('simulacro')">Simulacro</button>
+    <button onclick="UI.mostrarModulo('ranking')">Ranking</button>
+    <button onclick="UI.mostrarModulo('historial')">Historial</button>
+    <button onclick="UI.mostrarModulo('perfil')">Perfil</button>
+</div>
+
+<div id="app">
+
+<h2>Simulacro ICFES</h2>
+
+<div id="layout">
+    <div id="contenido">
+
+        <!-- INICIO -->
+        <div id="mod-inicio" class="modulo">
+            <h3>Bienvenido 👋</h3>
+            <p>Prepárate para el ICFES y mejora tus resultados.</p>
+            <p>La práctica constante es la clave del éxito 💪</p>
+        </div>
+
+        <!-- SIMULACRO -->
+        <div id="mod-simulacro" class="modulo" style="display:none;">
+
+            <div id="menu">
+                <h3>Selecciona el área</h3>
+
+                <!-- 🔥 CAMBIO AQUÍ -->
+                <button onclick="app.iniciarSimulacro(1)">Matemáticas</button>
+                <button onclick="app.iniciarSimulacro(2)">Lectura Crítica</button>
+                <button onclick="app.iniciarSimulacro(3)">Sociales</button>
+                <button onclick="app.iniciarSimulacro(4)">Naturales</button>
+                <button onclick="app.iniciarSimulacro(5)">Inglés</button>
+            </div>
+
+            <p id="stats"></p>
+            <p id="tiempo">Tiempo: 00:00</p>
+
+            <div id="enunciado"></div>
+            <div id="opciones"></div>
+
+            <!-- 🔥 YA NO USA onclick -->
+            <button id="btn" style="display:none;">
+                Siguiente
+            </button>
+
+        </div>
+
+        <!-- RANKING -->
+        <div id="mod-ranking" class="modulo" style="display:none;">
+            <h3>🏆 Ranking</h3>
+            <div id="lista-ranking"></div>
+        </div>
+
+        <!-- HISTORIAL -->
+        <div id="mod-historial" class="modulo" style="display:none;">
+            <h3>📊 Historial</h3>
+            <div id="lista-historial"></div>
+        </div>
+
+        <!-- PERFIL -->
+        <div id="mod-perfil" class="modulo" style="display:none;">
+            <h3>👤 Perfil</h3>
+
+            <p><strong>Nombre:</strong> <span id="perfil-nombre"></span></p>
+            <p><strong>Correo:</strong> <span id="perfil-correo"></span></p>
+
+            <p>Intentos: <span id="perfil-intentos"></span></p>
+            <p>Mejor puntaje: <span id="perfil-mejor"></span></p>
+        </div>
+
+    </div>
+</div>
+
+<!-- 🔥 IMPORTANTE: NUEVO JS -->
+<script src="appnuevo.js"></script>
+
+</body>
+</html>

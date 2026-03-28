@@ -35,7 +35,6 @@ app.get('/api/preguntas', (req, res) => {
         SELECT 
             id_pregunta, 
             enunciado, 
-            url_imagen, 
             opcion_a, 
             opcion_b, 
             opcion_c, 
