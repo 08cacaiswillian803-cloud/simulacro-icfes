@@ -133,51 +133,56 @@ console.log(e)
 // =======================
 // RENDER
 // =======================
-function render(){
-    const p = preguntas[index]
+function render() {
+    // 1. Validar que existan preguntas
+    if (!preguntas || !preguntas[index]) return;
 
-    // Asegúrate de que estos elementos sean visibles (por si vienen de un resultado anterior)
-    document.getElementById("enunciado").style.display = "block"
-    document.getElementById("opciones").style.display = "block"
+    const p = preguntas[index];
 
+    // 2. ASEGURAR VISIBILIDAD (Esto es lo que te estaba fallando)
+    document.getElementById("enunciado").style.display = "block";
+    document.getElementById("opciones").style.display = "block";
+    document.getElementById("btn").style.display = "none";
+
+    // 3. Actualizar texto de progreso
     document.getElementById("stats").innerText = 
-    `Pregunta ${index+1} de ${preguntas.length}`
+        `Pregunta ${index + 1} de ${preguntas.length}`;
 
-    // Renderizamos el enunciado (que ya trae el <img src="..."> de la DB)
-    document.getElementById("enunciado").innerHTML = p.enunciado
+    // 4. Renderizar enunciado con INNERHTML (para que cargue la <img> de la DB)
+    document.getElementById("enunciado").innerHTML = p.enunciado;
 
-    const cont = document.getElementById("opciones")
-    cont.innerHTML = ""
+    // 5. Limpiar y generar opciones
+    const cont = document.getElementById("opciones");
+    cont.innerHTML = "";
+    seleccion = null;
 
-    document.getElementById("btn").style.display="none"
-    seleccion = null
-
-    const opciones = [p.opcion_a, p.opcion_b, p.opcion_c, p.opcion_d]
+    const opciones = [p.opcion_a, p.opcion_b, p.opcion_c, p.opcion_d];
 
     opciones.forEach((texto, i) => {
-        const letra = ["A", "B", "C", "D"][i]
-        const btn = document.createElement("button")
-        btn.className = "opcion"
-        // También usamos innerHTML aquí por si las opciones tienen fórmulas o formato
-        btn.innerHTML = `${letra}. ${texto}`
+        const letra = ["A", "B", "C", "D"][i];
+        const btn = document.createElement("button");
+        btn.className = "opcion";
+        
+        // Usamos innerHTML también en las opciones por si traen fórmulas
+        btn.innerHTML = `${letra}. ${texto}`;
 
         btn.onclick = () => {
-            if (seleccion) return
-            document.querySelectorAll(".opcion").forEach(o => o.classList.remove("selected"))
-            btn.classList.add("selected")
-            seleccion = letra
-            document.getElementById("btn").style.display = "block"
+            if (seleccion) return; // Evitar cambios si ya respondió
 
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth"
-            })
-        }
-        cont.appendChild(btn)
-    })
+            document.querySelectorAll(".opcion")
+                .forEach(o => o.classList.remove("selected"));
 
+            btn.classList.add("selected");
+            seleccion = letra;
+            document.getElementById("btn").style.display = "block";
+        };
+
+        cont.appendChild(btn);
+    });
+
+    // 6. Renderizar fórmulas matemáticas si existen
     if (window.MathJax) {
-        MathJax.typesetPromise()
+        MathJax.typesetPromise();
     }
 }
 
