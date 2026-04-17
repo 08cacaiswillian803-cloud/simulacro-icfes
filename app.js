@@ -486,3 +486,65 @@ document.getElementById("auth").style.display="flex"
 }
 
 }
+
+function cambiarTabAdmin(tab, btn){
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = 'block';
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+async function guardarNuevaPregunta() {
+
+    const data = {
+        id_area: adm-area.value,
+        id_contexto: adm-contexto.value || null,
+        enunciado: adm-enunciado.value,
+        opcion_a: adm-a.value,
+        opcion_b: adm-b.value,
+        opcion_c: adm-c.value,
+        opcion_d: adm-d.value,
+        respuesta_correcta: adm-correcta.value
+    };
+
+    const res = await fetch("http://localhost:3000/api/preguntas", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(data)
+    });
+
+    alert("Guardado");
+}
+
+async function actualizarPregunta(){
+
+    const id = edit-id-buscar.value;
+
+    const data = {
+        id_contexto: edit-contexto.value || null,
+        enunciado: edit-enunciado.value,
+        opcion_a: edit-a.value,
+        opcion_b: edit-b.value,
+        opcion_c: edit-c.value,
+        opcion_d: edit-d.value,
+        respuesta_correcta: edit-correcta.value
+    };
+
+    await fetch(`http://localhost:3000/api/preguntas/${id}`,{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(data)
+    });
+
+    alert("Actualizado");
+}
+async function eliminarPregunta(){
+
+    const id = document.getElementById("del-id").value;
+
+    await fetch(`http://localhost:3000/api/preguntas/${id}`,{
+        method:"DELETE"
+    });
+
+    alert("Eliminado");
+}

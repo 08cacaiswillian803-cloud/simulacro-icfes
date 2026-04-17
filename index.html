@@ -53,6 +53,7 @@ inlineMath: [['$', '$']]
         <button onclick="mostrarModulo('ranking')">Ranking</button>
         <button onclick="mostrarModulo('historial')">Historial</button>
         <button onclick="mostrarModulo('perfil')">Perfil</button>
+         <button onclick="mostrarModulo('administracion')">administracion</button>
     </div>
 <div id="app">
 
@@ -115,6 +116,88 @@ inlineMath: [['$', '$']]
             <p>Intentos: <span id="perfil-intentos"></span></p>
             <p>Mejor puntaje: <span id="perfil-mejor"></span></p>
         </div>
+
+        <div id="mod-admin" class="modulo" style="display:none;">
+    <h3>🛠️ Panel de Administración</h3>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+        <button onclick="cambiarTabAdmin('añadir', this)" class="tab-btn active">➕ Añadir</button>
+        <button onclick="cambiarTabAdmin('editar', this)" class="tab-btn">✏️ Editar</button>
+        <button onclick="cambiarTabAdmin('eliminar', this)" class="tab-btn">🗑️ Eliminar</button>
+    </div>
+
+    <!-- ================= AÑADIR ================= -->
+    <div id="tab-añadir" class="tab-content">
+
+        <div class="admin-form">
+
+            <select id="adm-area">
+                <option value="1">Matemáticas</option>
+                <option value="2">Lectura</option>
+                <option value="3">Sociales</option>
+                <option value="4">Naturales</option>
+                <option value="5">Inglés</option>
+            </select>
+
+            <input type="number" id="adm-contexto" placeholder="ID Contexto (opcional)">
+
+            <textarea id="adm-enunciado" placeholder="Enunciado"></textarea>
+
+            <input id="adm-a" placeholder="Opción A">
+            <input id="adm-b" placeholder="Opción B">
+            <input id="adm-c" placeholder="Opción C">
+            <input id="adm-d" placeholder="Opción D">
+
+            <select id="adm-correcta">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+
+            <button onclick="guardarNuevaPregunta()">💾 Guardar</button>
+
+            <p id="admin-msg"></p>
+        </div>
+    </div>
+
+    <!-- ================= EDITAR ================= -->
+    <div id="tab-editar" class="tab-content" style="display:none;">
+
+        <input type="number" id="edit-id-buscar" placeholder="ID pregunta">
+        <button onclick="buscarPreguntaParaEditar()">🔍 Buscar</button>
+
+        <div id="contenedor-edicion" style="display:none;">
+
+            <input type="number" id="edit-contexto" placeholder="ID Contexto">
+
+            <textarea id="edit-enunciado"></textarea>
+
+            <input id="edit-a">
+            <input id="edit-b">
+            <input id="edit-c">
+            <input id="edit-d">
+
+            <select id="edit-correcta">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+
+            <button onclick="actualizarPregunta()">💾 Guardar cambios</button>
+        </div>
+    </div>
+
+    <!-- ================= ELIMINAR ================= -->
+    <div id="tab-eliminar" class="tab-content" style="display:none;">
+        <input type="number" id="del-id" placeholder="ID pregunta">
+        <button onclick="eliminarPregunta()">🗑️ Eliminar</button>
+    </div>
+
+</div>
+
 
     </div>
 

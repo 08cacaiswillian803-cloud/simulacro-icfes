@@ -221,6 +221,150 @@ app.get('/api/perfil/:id', (req, res) => {
     });
 
 });
+
+app.post("/api/preguntas", (req, res) => {
+
+    const {
+        id_area,
+        id_contexto,
+        enunciado,
+        opcion_a,
+        opcion_b,
+        opcion_c,
+        opcion_d,
+        respuesta_correcta
+    } = req.body;
+
+    const sql = `
+        INSERT INTO preguntas 
+        (id_area, id_contexto, enunciado, opcion_a, opcion_b, opcion_c, opcion_d, respuesta_correcta)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(sql, [
+        id_area,
+        id_contexto || null,
+        enunciado,
+        opcion_a,
+        opcion_b,
+        opcion_c,
+        opcion_d,
+        respuesta_correcta
+    ], (err, result) => {
+
+        if (err) {
+            console.error(err);
+            return res.json({ status: "error" });
+        }
+
+        res.json({ status: "ok", id_pregunta: result.insertId });
+    });
+});
+
+app.get("/api/preguntas/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    const sql = "SELECT * FROM preguntas WHERE id_pregunta = ?";
+
+    db.query(sql, [id], (err, result) => {
+
+        if (err) {
+            console.error(err);
+            return res.json(null);
+        }
+
+        if (result.length === 0) {
+            return res.json(null);
+        }
+
+        res.json(result[0]);
+    });
+});
+
+app.put("/api/preguntas/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    const {
+        id_contexto,
+        enunciado,
+        opcion_a,
+        opcion_b,
+        opcion_c,
+        opcion_d,
+        respuesta_correcta
+    } = req.body;
+
+    const sql = `
+        UPDATE preguntas SET
+        id_contexto=?,
+        enunciado=?,
+        opcion_a=?,
+        opcion_b=?,
+        opcion_c=?,
+        opcion_d=?,
+        respuesta_correcta=?
+        WHERE id_pregunta=?
+    `;
+
+    db.query(sql, [
+        id_contexto || null,
+        enunciado,
+        opcion_a,
+        opcion_b,
+        opcion_c,
+        opcion_d,
+        respuesta_correcta,
+        id
+    ], (err) => {
+
+        if (err) {
+            console.error(err);
+            return res.json({ status: "error" });
+        }
+
+        res.json({ status: "ok" });
+    });
+});
+
+app.delete("/api/preguntas/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    db.query("DELETE FROM preguntas WHERE id_pregunta = ?", [id], (err) => {
+
+        if (err) {
+            console.error(err);
+            return res.json({ status: "error" });
+        }
+
+        res.json({ status: "ok" });
+    });
+});
+
+app.get("/api/preguntas/area/:area", (req, res) => {
+
+    const area = req.params.area;
+
+    const sql = `
+        SELECT p.*, c.texto AS contexto
+        FROM preguntas p
+        LEFT JOIN contextos c ON p.id_contexto = c.id_contexto
+        WHERE p.id_area = ?
+    `;
+
+    db.query(sql, [area], (err, result) => {
+
+        if (err) {
+            console.error(err);
+            return res.json([]);
+        }
+
+        res.json(result);
+    });
+});
+
 app.listen(3000, () => {
     console.log("🚀 Servidor corriendo en http://localhost:3000");
 });
