@@ -408,3 +408,233 @@ h3{
     background:#4f46e5;
     color:white;
 }
+/* ========================= */
+/* 🛠️ ADMIN PANEL */
+/* ========================= */
+
+/* Tabs */
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #e5e7eb;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.tab-btn:hover {
+    background: #d1d5db;
+}
+
+.tab-btn.active {
+    background: #4f46e5;
+    color: white;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+}
+
+/* Contenido */
+.tab-content {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Formulario */
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Inputs */
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.admin-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Botones */
+.admin-form button {
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-form button:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+}
+
+/* Botón eliminar */
+#tab-eliminar button {
+    background: #ef4444;
+}
+
+#tab-eliminar button:hover {
+    background: #dc2626;
+}
+
+/* Contenedor edición */
+#contenedor-edicion {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+/* Mensajes */
+#admin-msg {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+/* ========================= */
+/* 🛠️ ADMIN - EDITAR Y ELIMINAR */
+/* ========================= */
+
+/* Caja general de editar / eliminar */
+#tab-editar .admin-form,
+#tab-eliminar .admin-form {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Labels */
+#tab-editar label,
+#tab-eliminar label {
+    font-weight: 700;
+    color: #374151;
+    font-size: 14px;
+}
+
+/* Inputs, textarea y select dentro de editar/eliminar */
+#tab-editar input,
+#tab-editar textarea,
+#tab-editar select,
+#tab-eliminar input,
+#tab-eliminar textarea,
+#tab-eliminar select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#tab-editar input:focus,
+#tab-editar textarea:focus,
+#tab-editar select:focus,
+#tab-eliminar input:focus,
+#tab-eliminar textarea:focus,
+#tab-eliminar select:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* Área de búsqueda en editar */
+#tab-editar > .admin-form > div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Botón buscar */
+#tab-editar button {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+#tab-editar button:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+}
+
+/* Botón guardar cambios */
+#contenedor-edicion button {
+    background: #4f46e5;
+    color: white;
+}
+
+#contenedor-edicion button:hover {
+    background: #4338ca;
+}
+
+/* Botón eliminar */
+#tab-eliminar button {
+    padding: 14px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #ef4444;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+#tab-eliminar button:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* Contenedor edición */
+#contenedor-edicion {
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 15px;
+    margin-top: 15px;
+    display: none;
+    gap: 12px;
+}
+
+/* Grid de opciones dentro de editar */
+#contenedor-edicion .grid-opciones {
+    margin-top: 5px;
+}

@@ -27,21 +27,27 @@ db.connect(err => {
 // ============================
 // 1. OBTENER PREGUNTAS
 // ============================
-app.get('/api/preguntas', (req, res) => {
+
+
+    app.get('/api/preguntas', (req, res) => {
     let area = parseInt(req.query.area);
     if (!area) area = 1;
 
     const sql = `
         SELECT 
-            id_pregunta, 
-            enunciado, 
-            opcion_a, 
-            opcion_b, 
-            opcion_c, 
-            opcion_d, 
-            respuesta_correcta 
-        FROM preguntas 
-        WHERE id_area = ? 
+            p.id_pregunta, 
+            p.id_contexto,
+            p.enunciado, 
+            p.opcion_a, 
+            p.opcion_b, 
+            p.opcion_c, 
+            p.opcion_d, 
+            p.respuesta_correcta,
+            c.descripcion AS contexto
+        FROM preguntas p
+        LEFT JOIN contextos c
+            ON p.id_contexto = c.id_contexto
+        WHERE p.id_area = ? 
         ORDER BY RAND() 
         LIMIT 50
     `;
