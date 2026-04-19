@@ -2,12 +2,23 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const path = require('path');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+
+cloudinary.config({
+    cloud_name: 'dgnivrsl6',
+    api_key: '582391443693159',
+    api_secret: 'i5MYuMINxbxXuB-jvpwNsNSWDs0'
+})
+
+// ✅ Multer en memoria  👈 AQUÍ
+const upload = multer({ storage: multer.memoryStorage() })
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -23,6 +34,7 @@ db.connect(err => {
     }
     console.log("✅ Conectado a MySQL");
 });
+
 
 // ============================
 // 1. OBTENER PREGUNTAS
@@ -95,7 +107,7 @@ app.get('/api/ranking', (req, res) => {
         JOIN usuarios u ON i.id_usuario = u.id_usuario
         JOIN areas a ON i.id_area = a.id_area
         GROUP BY u.id_usuario, a.id_area
-        ORDER BY mejor_puntaje DESC
+       ORDER BY mejor_puntaje DESC
         LIMIT 10
     `;
 
@@ -110,8 +122,7 @@ app.get('/api/ranking', (req, res) => {
 // ============================
 app.post('/api/login', (req, res) => {
     const { correo, password } = req.body;
-    const sql = 'SELECT id_usuario, nombre FROM usuarios WHERE correo = ? AND password = ?';
-
+   const sql = 'SELECT id_usuario, nombre, es_admin FROM usuarios WHERE correo = ? AND password = ?'
     db.query(sql, [correo, password], (err, results) => {
         if (err || results.length === 0) {
             return res.status(401).json({ error: "Credenciales incorrectas" });
@@ -370,7 +381,27 @@ app.get("/api/preguntas/area/:area", (req, res) => {
         res.json(result);
     });
 });
+// ✅ Endpoint subir imagen a Cloudinary
+app.post('/api/subir-imagen', upload.single('imagen'), async (req, res) => {
+    if (!req.file) return res.json({ error: "No se recibió imagen" })
 
+    try {
+        const resultado = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream(
+                { folder: 'simulacro_icfes' },
+                (error, result) => {
+                    if (error) reject(error)
+                    else resolve(result)
+                }
+            ).end(req.file.buffer)
+        })
+
+        res.json({ url: resultado.secure_url })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: "Error subiendo imagen" })
+    }
+})
 app.listen(3000, () => {
     console.log("🚀 Servidor corriendo en http://localhost:3000");
 });

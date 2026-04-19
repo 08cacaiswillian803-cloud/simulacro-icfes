@@ -72,11 +72,12 @@ body{
     flex-direction:column;
     gap:12px;
     /* Clase para resaltar el botón del módulo activo */
+
+}
 .btn-active {
     background: #4f46e5 !important;
     color: white !important;
     box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
-}
 }
 
 #sidebar button{
@@ -389,25 +390,7 @@ h3{
 }
 
 }
-.admin-tabs{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-}
 
-.tab-btn{
-    flex:1;
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:#e5e7eb;
-    cursor:pointer;
-}
-
-.tab-btn.active{
-    background:#4f46e5;
-    color:white;
-}
 /* ========================= */
 /* 🛠️ ADMIN PANEL */
 /* ========================= */
@@ -637,4 +620,99 @@ h3{
 /* Grid de opciones dentro de editar */
 #contenedor-edicion .grid-opciones {
     margin-top: 5px;
+}
+/* ========================= */
+/* 🔐 AUTH TABS */
+/* ========================= */
+.auth-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #e0e7ff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.auth-tab.active {
+    background: #4f46e5;
+    color: white;
+}
+
+.auth-tab:hover {
+    background: #c7d2fe;
+}
+/* ========================= */
+/* 🚪 CERRAR SESIÓN */
+/* ========================= */
+#btn-logout {
+    background: #fee2e2 !important;
+    color: #ef4444 !important;
+    margin-top: auto;
+}
+
+#btn-logout:hover {
+    background: #fecaca !important;
+}
+/* ========================= */
+/* 🔍 ZOOM DE IMÁGENES */
+/* ========================= */
+#enunciado img, #contexto img {
+    cursor: zoom-in;
+    transition: 0.2s;
+    border-radius: 8px;
+}
+
+/* Overlay oscuro de fondo */
+#zoom-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+}
+
+#zoom-overlay.activo {
+    display: flex;
+}
+
+#zoom-overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: fadeIn 0.2s ease;
+}
+/* ========================= */
+/* 🖼️ IMÁGENES EN ENUNCIADO */
+/* ========================= */
+#enunciado img, #contexto img {
+    display: block;
+    margin: 20px auto;
+    max-width: 80%;
+    width: auto;
+    height: auto;
+    min-width: 400px;
+    border-radius: 8px;
+    cursor: zoom-in;
+}
+
+@media (max-width: 768px) {
+    #enunciado img, #contexto img {
+        min-width: unset;
+        max-width: 100%;
+    }
 }

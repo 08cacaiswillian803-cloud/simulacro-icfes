@@ -29,22 +29,37 @@ inlineMath: [['$', '$']]
 <body>
     <!-- 🔐 LOGIN / REGISTRO -->
 <div id="auth">
-
     <div id="auth-box">
 
         <h2>Simulacro ICFES</h2>
 
-        <input type="text" id="nombre" placeholder="Nombre de usuario">
-        <input type="email" id="correo" placeholder="Correo">
-        <input type="password" id="password" placeholder="Contraseña">
+        <!-- Tabs -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="cambiarAuthTab('login', this)">
+                Iniciar sesión
+            </button>
+            <button class="auth-tab" onclick="cambiarAuthTab('registro', this)">
+                Registrarse
+            </button>
+        </div>
 
-        <button onclick="login()">Iniciar sesión</button>
-        <button onclick="registro()">Registrarse</button>
+        <!-- Formulario Login -->
+        <div id="form-login">
+            <input type="email" id="correo-login" placeholder="Correo">
+            <input type="password" id="password-login" placeholder="Contraseña">
+            <button onclick="login()">Iniciar sesión</button>
+        </div>
+
+        <!-- Formulario Registro -->
+        <div id="form-registro" style="display:none;">
+            <input type="text" id="nombre-registro" placeholder="Nombre">
+            <input type="email" id="correo-registro" placeholder="Correo">
+            <input type="password" id="password-registro" placeholder="Contraseña">
+            <button onclick="registro()">Registrarse</button>
+        </div>
 
         <p id="auth-msg"></p>
-
     </div>
-
 </div>
  <!-- SIDEBAR -->
     <div id="sidebar">
@@ -53,7 +68,13 @@ inlineMath: [['$', '$']]
         <button onclick="mostrarModulo('ranking')">Ranking</button>
         <button onclick="mostrarModulo('historial')">Historial</button>
         <button onclick="mostrarModulo('perfil')">Perfil</button>
-         <button onclick="mostrarModulo('admin')">administracion</button>
+         <!-- ✅ DESPUÉS -->
+<button id="btn-admin" onclick="mostrarModulo('admin')" style="display:none;">
+    🛠️ Administración
+</button>
+ <!-- ✅ NUEVO -->
+    <button id="btn-logout" onclick="cerrarSesion()">🚪 Cerrar sesión</button>
+</div>
     </div>
 <div id="app">
 
@@ -143,7 +164,20 @@ inlineMath: [['$', '$']]
 
             <input type="number" id="adm-contexto" placeholder="ID Contexto (opcional)">
 
-            <textarea id="adm-enunciado" placeholder="Enunciado"></textarea>
+           <!-- Editor de enunciado -->
+<div class="editor-toolbar">
+    <button type="button" onclick="insertarImagenURL()">🔗 Insertar URL</button>
+    <button type="button" onclick="insertarImagenArchivo()">📁 Subir imagen</button>
+    <input type="file" id="input-archivo-img" accept="image/*" style="display:none" onchange="subirImagen(this)">
+</div>
+
+<textarea id="adm-enunciado" 
+    placeholder="Escribe el enunciado aquí. Usa los botones para insertar imágenes donde quieras."
+    oninput="actualizarPreview()">
+</textarea>
+
+<!-- Preview en tiempo real -->
+<div id="preview-enunciado" class="preview-enunciado"></div>
 
             <input id="adm-a" placeholder="Opción A">
             <input id="adm-b" placeholder="Opción B">
@@ -203,7 +237,10 @@ inlineMath: [['$', '$']]
     </div>
 
 </div>
-
+<!-- 🔍 ZOOM OVERLAY -->
+<div id="zoom-overlay" onclick="cerrarZoom()">
+    <img id="zoom-img" src="">
+</div>
 <script src="app.js"></script>
 
 </body>

@@ -1,6 +1,9 @@
+// ⚙️ CONFIGURACION
+const API = "http://localhost:3000"
 // =======================
 // VARIABLES GLOBALES
 // =======================
+
 let preguntas = []
 let index = 0
 let aciertos = 0
@@ -14,7 +17,16 @@ let intervalo = null
 // =======================
 // CAMBIO DE MODULOS
 // =======================
+
 function mostrarModulo(modulo){
+    // 🔐 Proteger admin
+    if (modulo === "admin") {
+        const user = JSON.parse(localStorage.getItem("usuario"))
+        if (!user || !user.es_admin) {
+            alert("⛔ No tienes permiso para acceder aquí")
+            return
+        }
+    }
 
 document.querySelectorAll(".modulo")
 .forEach(m=>m.style.display="none")
@@ -114,7 +126,7 @@ async function cargarDatos(){
 
 try{
 
-const res = await fetch(`http://localhost:3000/api/preguntas?area=${areaSeleccionada}`)
+const res = await fetch(`${API}/api/preguntas?area=${areaSeleccionada}`)
 preguntas = await res.json()
 
 
@@ -131,10 +143,6 @@ console.log(e)
 
 }
 
-
-// =======================
-// RENDER
-// =======================
 // =======================
 // RENDER
 // =======================
@@ -187,12 +195,25 @@ function render() {
     enunciadoDiv.style.display = "block";
     opcionesDiv.style.display = "block";
     btnSiguiente.style.display = "none";
+    // ✅ Rehabilitar botón
+btnSiguiente.disabled = false
+btnSiguiente.innerText = "Siguiente"
 
     // 6. Progreso
     statsDiv.innerText = `Pregunta ${index + 1} de ${preguntas.length}`;
 
     // 7. Enunciado
     enunciadoDiv.innerHTML = p.enunciado;
+    // ✅ Zoom
+enunciadoDiv.querySelectorAll("img").forEach(img => {
+    img.onclick = () => abrirZoom(img.src)
+})
+
+if (contextoDiv) {
+    contextoDiv.querySelectorAll("img").forEach(img => {
+        img.onclick = () => abrirZoom(img.src)
+    })
+}
 
     // 8. Opciones
     opcionesDiv.innerHTML = "";
@@ -228,40 +249,38 @@ function render() {
 // =======================
 // SIGUIENTE
 // =======================
+// ✅ DESPUÉS
 async function siguiente(){
 
-if(!seleccion) return
+    if(!seleccion) return
 
-const id = preguntas[index].id_pregunta
+    // 🔒 Bloquear botón para evitar doble clic
+    const btn = document.getElementById("btn")
+    btn.disabled = true
+    btn.innerText = "Cargando..."
 
-const res = await fetch(
-`http://localhost:3000/api/validar/${id}/${seleccion}`
-)
+    const id = preguntas[index].id_pregunta
 
-const data = await res.json()
+    const res = await fetch(`${API}/api/validar/${id}/${seleccion}`)
 
-const correcta = preguntas[index].respuesta_correcta
+    const data = await res.json()
 
-document.querySelectorAll(".opcion").forEach(btn=>{
+    const correcta = preguntas[index].respuesta_correcta
 
-const letra = btn.innerText.charAt(0)
+    document.querySelectorAll(".opcion").forEach(btn=>{
+        const letra = btn.innerText.charAt(0)
+        if(letra===correcta) btn.classList.add("correcta")
+        if(letra===seleccion && !data.correcta) btn.classList.add("incorrecta")
+    })
 
-if(letra===correcta) btn.classList.add("correcta")
+    if(data.correcta) aciertos++
 
-if(letra===seleccion && !data.correcta)
-btn.classList.add("incorrecta")
+    index++
 
-})
-
-if(data.correcta) aciertos++
-
-index++
-
-setTimeout(()=>{
-if(index<preguntas.length) render()
-else resultado()
-},1000)
-
+    setTimeout(()=>{
+        if(index<preguntas.length) render()
+        else resultado()
+    },1000)
 }
 
 // =======================
@@ -269,49 +288,50 @@ else resultado()
 // =======================
 async function resultado(){
 
-clearInterval(intervalo)
+    clearInterval(intervalo)
 
-const porcentaje = Math.round((aciertos/preguntas.length)*100)
+    // ✅ PRIMERO verificar sesión
+    const user = JSON.parse(localStorage.getItem("usuario"))
+    if (!user || !user.id_usuario) {
+        alert("⚠️ Sesión expirada, inicia sesión de nuevo")
+        localStorage.removeItem("usuario")
+        location.reload()
+        return
+    }
 
-if(porcentaje>=70){
-confetti({
-particleCount:150,
-spread:70
-})
-}
+    const porcentaje = Math.round((aciertos/preguntas.length)*100)
 
-const tiempoFinal = document.getElementById("tiempo").innerText.replace("Tiempo: ","")
+    if(porcentaje>=70){
+        confetti({
+            particleCount:150,
+            spread:70
+        })
+    }
 
-// 🔥 OCULTAR cosas del simulacro
-document.getElementById("opciones").style.display = "none"
-document.getElementById("btn").style.display = "none"
-document.getElementById("enunciado").style.display = "none"
+    const tiempoFinal = document.getElementById("tiempo").innerText.replace("Tiempo: ","")
 
-// 🔥 MOSTRAR MENÚ DE NUEVO
-document.getElementById("menu").style.display = "none"
+    document.getElementById("opciones").style.display = "none"
+    document.getElementById("btn").style.display = "none"
+    document.getElementById("enunciado").style.display = "none"
+    document.getElementById("menu").style.display = "none"
 
-// 🔥 MOSTRAR RESULTADO
-document.getElementById("stats").innerHTML = `
-<h2>Resultado</h2>
-<h1>${aciertos}/${preguntas.length}</h1>
-<p>${porcentaje}%</p>
-<p>Tiempo total: ${tiempoFinal}</p>
+    document.getElementById("stats").innerHTML = `
+        <h2>Resultado</h2>
+        <h1>${aciertos}/${preguntas.length}</h1>
+        <p>${porcentaje}%</p>
+        <p>Tiempo total: ${tiempoFinal}</p>
+        <div class="botones-resultado">
+            <button class="btn-final btn-reintentar" onclick="reintentarMismaArea()">
+                🔄 Reintentar misma área
+            </button>
+            <button class="btn-final btn-volver" onclick="volverSimulacros()">
+                📚 Elegir otra área
+            </button>
+        </div>
+    `
 
-<div class="botones-resultado">
-<button class="btn-final btn-reintentar" onclick="reintentarMismaArea()">
-🔄 Reintentar misma área
-</button>
+    await fetch(`${API}/api/guardar-intento`, {
 
-<button class="btn-final btn-volver" onclick="volverSimulacros()">
-📚 Elegir otra área
-</button>
-</div>
-`
-
-// guardar intento
-const user = JSON.parse(localStorage.getItem("usuario"))
-
-await fetch("http://localhost:3000/api/guardar-intento",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -347,7 +367,7 @@ async function cargarHistorial(){
 
 const user = JSON.parse(localStorage.getItem("usuario"))
 
-const res = await fetch(`http://localhost:3000/api/historial/${user.id_usuario}`)
+const res = await fetch(`${API}/api/historial/${user.id_usuario}`)
 const data = await res.json()
 
 let html = "<table style='width:100%;text-align:center'>"
@@ -388,7 +408,7 @@ document.getElementById("lista-historial").innerHTML = html
 // =======================
 async function cargarRanking(){
 
-const res = await fetch("http://localhost:3000/api/ranking")
+const res = await fetch(`${API}/api/ranking`)
 const data = await res.json()
 
 let html = "<table style='width:100%;text-align:center'>"
@@ -427,7 +447,7 @@ async function cargarPerfil(){
 
 const user = JSON.parse(localStorage.getItem("usuario"))
 
-const res = await fetch(`http://localhost:3000/api/perfil/${user.id_usuario}`)
+const res = await fetch(`${API}/api/perfil/${user.id_usuario}`)
 const data = await res.json()
 
 document.getElementById("perfil-nombre").innerText = data.nombre
@@ -442,11 +462,10 @@ document.getElementById("perfil-mejor").innerText = data.mejor || 0
 // LOGIN
 // =======================
 async function login(){
+const correo = document.getElementById("correo-login").value
+  const password = document.getElementById("password-login").value
 
-const correo = document.getElementById("correo").value
-const password = document.getElementById("password").value
-
-const res = await fetch("http://localhost:3000/api/login",{
+const res = await fetch(`${API}/api/login`, {
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -475,16 +494,16 @@ mostrarModulo("inicio")
 // =======================
 async function registro(){
 
-const nombre = document.getElementById("nombre").value
-const correo = document.getElementById("correo").value
-const password = document.getElementById("password").value
+const nombre = document.getElementById("nombre-registro").value
+    const correo = document.getElementById("correo-registro").value
+    const password = document.getElementById("password-registro").value
 
 if(!nombre || !correo || !password){
 document.getElementById("auth-msg").innerText="Completa todos los campos"
 return
 }
 
-const res = await fetch("http://localhost:3000/api/registro",{
+const res = await fetch(`${API}/api/registro`, {
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -507,22 +526,20 @@ document.getElementById("auth-msg").innerText="Usuario creado, ahora inicia sesi
 // =======================
 // AUTO LOGIN
 // =======================
-window.onload = ()=>{
+window.onload = () => {
+    let user = localStorage.getItem("usuario")
+    try { user = JSON.parse(user) } catch { user = null }
 
-let user = localStorage.getItem("usuario")
+    if (user && user.id_usuario) {
+        mostrarModulo("inicio")
 
-try{
-user = JSON.parse(user)
-}catch{
-user = null
-}
-
-if(user && user.id_usuario){
-mostrarModulo("inicio")
-}else{
-document.getElementById("auth").style.display="flex"
-}
-
+        // ✅ Mostrar botón admin solo si corresponde
+        if (user.es_admin) {
+            document.getElementById("btn-admin").style.display = "block"
+        }
+    } else {
+        document.getElementById("auth").style.display = "flex"
+    }
 }
 
 function cambiarTabAdmin(tab, btn) {
@@ -577,7 +594,7 @@ async function guardarNuevaPregunta() {
     }
 
     try {
-        const res = await fetch("http://localhost:3000/api/preguntas", {
+        const res = await fetch(`${API}/api/preguntas`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -617,7 +634,7 @@ async function buscarPreguntaParaEditar() {
     }
 
     try {
-        const res = await fetch(`http://localhost:3000/api/preguntas/${id}`);
+        const res = await fetch(`${API}/api/preguntas/${id}`)
         const data = await res.json();
 
         if (!data) {
@@ -670,7 +687,7 @@ async function actualizarPregunta() {
     }
 
     try {
-        const res = await fetch(`http://localhost:3000/api/preguntas/${id}`, {
+       const res = await fetch(`${API}/api/preguntas/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -702,7 +719,7 @@ async function eliminarPregunta() {
     }
 
     try {
-        const res = await fetch(`http://localhost:3000/api/preguntas/${id}`, {
+        const res = await fetch(`${API}/api/preguntas/${id}`, {
             method: "DELETE"
         });
 
@@ -718,4 +735,109 @@ async function eliminarPregunta() {
         console.error(error);
         alert("❌ Error de conexión con el servidor");
     }
+}
+// ✅ NUEVA — cambiar entre tabs
+function cambiarAuthTab(tab, btn) {
+    document.querySelectorAll(".auth-tab").forEach(b => b.classList.remove("active"))
+    btn.classList.add("active")
+    document.getElementById("form-login").style.display = tab === "login" ? "block" : "none"
+    document.getElementById("form-registro").style.display = tab === "registro" ? "block" : "none"
+    document.getElementById("auth-msg").innerText = ""
+}
+// =======================
+// CERRAR SESIÓN
+// =======================
+function cerrarSesion(){
+    if(!confirm("¿Seguro que quieres cerrar sesión?")) return
+    localStorage.removeItem("usuario")
+    location.reload()
+}
+// =======================
+// ZOOM DE IMÁGENES
+// =======================
+function abrirZoom(src) {
+    document.getElementById("zoom-img").src = src
+    document.getElementById("zoom-overlay").classList.add("activo")
+}
+
+function cerrarZoom() {
+    document.getElementById("zoom-overlay").classList.remove("activo")
+    document.getElementById("zoom-img").src = ""
+}
+
+// Cerrar con tecla ESC
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") cerrarZoom()
+})
+// =======================
+// EDITOR DE IMÁGENES
+// =======================
+function insertarImagenURL() {
+    const enunciado = document.getElementById("adm-enunciado").value.trim()
+    if (!enunciado) {
+        alert("⚠️ Escribe el enunciado primero antes de insertar una imagen")
+        return
+    }
+    const url = prompt("Pega la URL de la imagen:")
+    if (!url) return
+    insertarEnCursor(`<div style="text-align:center;margin:16px 0;"><img src="${url}" style="max-width:100%;border-radius:8px;"></div>`)
+}
+
+function insertarImagenArchivo() {
+    const enunciado = document.getElementById("adm-enunciado").value.trim()
+    if (!enunciado) {
+        alert("⚠️ Escribe el enunciado primero antes de subir una imagen")
+        return
+    }
+    document.getElementById("input-archivo-img").click()
+}
+
+// Subir imagen al servidor y obtener URL
+async function subirImagen(input) {
+    const archivo = input.files[0]
+    if (!archivo) return
+
+    const formData = new FormData()
+    formData.append("imagen", archivo)
+
+    try {
+        const res = await fetch(`${API}/api/subir-imagen`, {
+            method: "POST",
+            body: formData
+        })
+        const data = await res.json()
+
+        if (data.url) {
+            insertarEnCursor(`<div style="text-align:center;margin:16px 0;"><img src="${data.url}" style="max-width:100%;border-radius:8px;"></div>`)
+        } else {
+            alert("❌ Error al subir la imagen")
+        }
+    } catch (e) {
+        console.error(e)
+        alert("❌ Error de conexión")
+    }
+
+    input.value = ""
+}
+
+// Insertar HTML en la posición del cursor del textarea
+function insertarEnCursor(html) {
+    const textarea = document.getElementById("adm-enunciado")
+    const inicio = textarea.selectionStart
+    const fin = textarea.selectionEnd
+    const texto = textarea.value
+
+    textarea.value = texto.substring(0, inicio) + html + texto.substring(fin)
+    textarea.selectionStart = textarea.selectionEnd = inicio + html.length
+    textarea.focus()
+
+    // Actualizar preview
+    actualizarPreview()
+}
+
+// Preview en tiempo real
+function actualizarPreview() {
+    const texto = document.getElementById("adm-enunciado").value
+    const preview = document.getElementById("preview-enunciado")
+    if (preview) preview.innerHTML = texto
 }
