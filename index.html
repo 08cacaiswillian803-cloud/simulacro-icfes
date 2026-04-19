@@ -84,11 +84,11 @@ inlineMath: [['$', '$']]
     <div id="contenido">
 
         <!-- INICIO -->
-        <div id="mod-inicio" class="modulo">
-            <h3>Bienvenido 👋</h3>
-            <p>Prepárate para el ICFES y mejora tus resultados.</p>
-            <p>La práctica constante es la clave del éxito 💪</p>
-        </div>
+<div id="mod-inicio" class="modulo">
+    <h3>Bienvenido, <span id="bienvenida-nombre" style="color:#4f46e5"></span> 👋</h3>
+    <p>Prepárate para el ICFES y mejora tus resultados.</p>
+    <p>La práctica constante es la clave del éxito 💪</p>
+</div>
 
         <!-- SIMULACRO -->
         <div id="mod-simulacro" class="modulo" style="display:none;">
@@ -104,6 +104,9 @@ inlineMath: [['$', '$']]
             </div>
 
             <p id="stats"></p>
+<div id="barra-contenedor">
+    <div id="barra-progreso"></div>
+</div>
             <p id="tiempo">Tiempo: 00:00</p>
             <div id="contexto"></div>
 
@@ -162,7 +165,27 @@ inlineMath: [['$', '$']]
                 <option value="5">Inglés</option>
             </select>
 
-            <input type="number" id="adm-contexto" placeholder="ID Contexto (opcional)">
+          <!-- ✅ DESPUÉS -->
+<div class="contexto-opciones">
+    <label>
+        <input type="radio" name="tipo-contexto" value="nuevo" checked onclick="cambiarTipoContexto('nuevo')"> 
+        Crear contexto nuevo
+    </label>
+    <label>
+        <input type="radio" name="tipo-contexto" value="existente" onclick="cambiarTipoContexto('existente')"> 
+        Usar contexto existente
+    </label>
+</div>
+
+<!-- Contexto nuevo -->
+<div id="div-contexto-nuevo">
+    <textarea id="adm-contexto-texto" placeholder="Escribe el contexto aquí (opcional)"></textarea>
+</div>
+
+<!-- Contexto existente -->
+<div id="div-contexto-existente" style="display:none;">
+    <input type="number" id="adm-contexto-id" placeholder="ID del contexto existente">
+</div>
 
            <!-- Editor de enunciado -->
 <div class="editor-toolbar">

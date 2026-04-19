@@ -12,7 +12,7 @@ let areaSeleccionada = 1
 
 let tiempo = 0
 let intervalo = null
-
+let respuestas = [] // ✅ AÑADIR
 
 // =======================
 // CAMBIO DE MODULOS
@@ -32,6 +32,13 @@ document.querySelectorAll(".modulo")
 .forEach(m=>m.style.display="none")
 
 document.getElementById("mod-"+modulo).style.display="block"
+// ✅ AÑADIR ESTO
+    if (modulo === "inicio") {
+        const user = JSON.parse(localStorage.getItem("usuario"))
+        if (user) {
+            document.getElementById("bienvenida-nombre").innerText = user.nombre
+        }
+    }
 
 if(modulo === "historial") cargarHistorial()
 if(modulo === "ranking") cargarRanking()
@@ -81,6 +88,10 @@ document.getElementById("mod-simulacro").innerHTML = `
 </div>
 
 <p id="stats"></p>
+  <p id="stats"></p>
+<div id="barra-contenedor">
+    <div id="barra-progreso"></div>
+</div>
 <p id="tiempo">Tiempo: 00:00</p>
  <div id="contexto"></div>
 
@@ -201,6 +212,10 @@ btnSiguiente.innerText = "Siguiente"
 
     // 6. Progreso
     statsDiv.innerText = `Pregunta ${index + 1} de ${preguntas.length}`;
+    // ✅ Actualizar barra
+const porcentajeAvance = ((index) / preguntas.length) * 100
+const barra = document.getElementById("barra-progreso")
+if (barra) barra.style.width = porcentajeAvance + "%"
 
     // 7. Enunciado
     enunciadoDiv.innerHTML = p.enunciado;
@@ -274,7 +289,13 @@ async function siguiente(){
     })
 
     if(data.correcta) aciertos++
-
+// ✅ AÑADIR AQUÍ
+respuestas.push({
+    pregunta: preguntas[index].enunciado,
+    respondio: seleccion,
+    correcta: preguntas[index].respuesta_correcta,
+    esCorrecta: data.correcta
+})
     index++
 
     setTimeout(()=>{
@@ -314,7 +335,9 @@ async function resultado(){
     document.getElementById("btn").style.display = "none"
     document.getElementById("enunciado").style.display = "none"
     document.getElementById("menu").style.display = "none"
-
+// ✅ AÑADIR ESTAS DOS
+document.getElementById("contexto").style.display = "none"
+document.getElementById("tiempo").style.display = "none"
     document.getElementById("stats").innerHTML = `
         <h2>Resultado</h2>
         <h1>${aciertos}/${preguntas.length}</h1>
@@ -324,10 +347,22 @@ async function resultado(){
             <button class="btn-final btn-reintentar" onclick="reintentarMismaArea()">
                 🔄 Reintentar misma área
             </button>
-            <button class="btn-final btn-volver" onclick="volverSimulacros()">
-                📚 Elegir otra área
-            </button>
+           <button class="btn-final btn-volver" onclick="volverSimulacros()">
+📚 Elegir otra área
+</button>
+</div>
+
+<div id="retroalimentacion">
+    <h3>📋 Revisión de respuestas</h3>
+    ${respuestas.map((r, i) => `
+        <div class="retro-item ${r.esCorrecta ? 'retro-correcta' : 'retro-incorrecta'}">
+            <p class="retro-num">Pregunta ${i + 1}</p>
+            <p class="retro-enunciado">${r.pregunta}</p>
+            <p>Tu respuesta: <strong>${r.respondio}</strong></p>
+            ${!r.esCorrecta ? `<p>Respuesta correcta: <strong>${r.correcta}</strong></p>` : ''}
         </div>
+    `).join('')}
+</div>
     `
 
     await fetch(`${API}/api/guardar-intento`, {
@@ -567,30 +602,57 @@ function cambiarTabAdmin(tab, btn) {
     }
 }
 
+//guardar nueva pregunta
+
 async function guardarNuevaPregunta() {
-    const msg = document.getElementById("admin-msg");
+    const msg = document.getElementById("admin-msg")
+
+    const tipoContexto = document.querySelector('input[name="tipo-contexto"]:checked').value
+    let id_contexto = null
+
+    // Si es contexto nuevo y tiene texto, guardarlo primero
+    if (tipoContexto === "nuevo") {
+        const textoContexto = document.getElementById("adm-contexto-texto").value.trim()
+        if (textoContexto) {
+            try {
+                const resCtx = await fetch(`${API}/api/contextos`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ descripcion: textoContexto })
+                })
+                const dataCtx = await resCtx.json()
+                if (dataCtx.id_contexto) {
+                    id_contexto = dataCtx.id_contexto
+                } else {
+                    msg.style.color = "red"
+                    msg.innerText = "❌ Error guardando contexto"
+                    return
+                }
+            } catch (e) {
+                msg.style.color = "red"
+                msg.innerText = "❌ Error de conexión guardando contexto"
+                return
+            }
+        }
+    } else {
+        id_contexto = document.getElementById("adm-contexto-id").value || null
+    }
 
     const data = {
         id_area: document.getElementById("adm-area").value,
-        id_contexto: document.getElementById("adm-contexto").value || null,
+        id_contexto,
         enunciado: document.getElementById("adm-enunciado").value.trim(),
         opcion_a: document.getElementById("adm-a").value.trim(),
         opcion_b: document.getElementById("adm-b").value.trim(),
         opcion_c: document.getElementById("adm-c").value.trim(),
         opcion_d: document.getElementById("adm-d").value.trim(),
         respuesta_correcta: document.getElementById("adm-correcta").value
-    };
+    }
 
-    if (
-        !data.enunciado ||
-        !data.opcion_a ||
-        !data.opcion_b ||
-        !data.opcion_c ||
-        !data.opcion_d
-    ) {
-        msg.style.color = "red";
-        msg.innerText = "⚠️ Completa el enunciado y las 4 opciones";
-        return;
+    if (!data.enunciado || !data.opcion_a || !data.opcion_b || !data.opcion_c || !data.opcion_d) {
+        msg.style.color = "red"
+        msg.innerText = "⚠️ Completa el enunciado y las 4 opciones"
+        return
     }
 
     try {
@@ -598,29 +660,26 @@ async function guardarNuevaPregunta() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
-        });
-
-        const result = await res.json();
+        })
+        const result = await res.json()
 
         if (result.status === "ok") {
-            msg.style.color = "green";
-            msg.innerText = `✅ Pregunta guardada con ID: ${result.id_pregunta}`;
-
-            document.getElementById("adm-contexto").value = "";
-            document.getElementById("adm-enunciado").value = "";
-            document.getElementById("adm-a").value = "";
-            document.getElementById("adm-b").value = "";
-            document.getElementById("adm-c").value = "";
-            document.getElementById("adm-d").value = "";
-            document.getElementById("adm-correcta").value = "A";
+            msg.style.color = "green"
+            msg.innerText = `✅ Pregunta guardada con ID: ${result.id_pregunta}`
+            document.getElementById("adm-contexto-texto").value = ""
+            document.getElementById("adm-enunciado").value = ""
+            document.getElementById("adm-a").value = ""
+            document.getElementById("adm-b").value = ""
+            document.getElementById("adm-c").value = ""
+            document.getElementById("adm-d").value = ""
+            document.getElementById("adm-correcta").value = "A"
         } else {
-            msg.style.color = "red";
-            msg.innerText = "❌ Error al guardar la pregunta";
+            msg.style.color = "red"
+            msg.innerText = "❌ Error al guardar la pregunta"
         }
     } catch (error) {
-        console.error(error);
-        msg.style.color = "red";
-        msg.innerText = "❌ Error de conexión con el servidor";
+        msg.style.color = "red"
+        msg.innerText = "❌ Error de conexión con el servidor"
     }
 }
 
@@ -840,4 +899,11 @@ function actualizarPreview() {
     const texto = document.getElementById("adm-enunciado").value
     const preview = document.getElementById("preview-enunciado")
     if (preview) preview.innerHTML = texto
+}
+// =======================
+// CONTEXTO
+// =======================
+function cambiarTipoContexto(tipo) {
+    document.getElementById("div-contexto-nuevo").style.display = tipo === "nuevo" ? "block" : "none"
+    document.getElementById("div-contexto-existente").style.display = tipo === "existente" ? "block" : "none"
 }

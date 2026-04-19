@@ -403,6 +403,22 @@ app.post('/api/subir-imagen', upload.single('imagen'), async (req, res) => {
         res.status(500).json({ error: "Error subiendo imagen" })
     }
 })
+// ============================
+// GUARDAR CONTEXTO
+// ============================
+app.post('/api/contextos', (req, res) => {
+    const { descripcion } = req.body
+    if (!descripcion) return res.json({ error: "Falta descripción" })
+
+    const sql = "INSERT INTO contextos (descripcion) VALUES (?)"
+    db.query(sql, [descripcion], (err, result) => {
+        if (err) {
+            console.error(err)
+            return res.json({ error: "Error guardando contexto" })
+        }
+        res.json({ id_contexto: result.insertId })
+    })
+})
 app.listen(3000, () => {
     console.log("🚀 Servidor corriendo en http://localhost:3000");
 });

@@ -716,3 +716,91 @@ h3{
         max-width: 100%;
     }
 }
+/* ========================= */
+/* 📊 BARRA DE PROGRESO */
+/* ========================= */
+#barra-contenedor {
+    width: 100%;
+    background: #e5e7eb;
+    border-radius: 10px;
+    height: 10px;
+    margin: 8px 0 16px 0;
+    overflow: hidden;
+}
+
+#barra-progreso {
+    height: 10px;
+    background: #4f46e5;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+}
+/* ========================= */
+/* 📋 RETROALIMENTACIÓN */
+/* ========================= */
+#retroalimentacion {
+    margin-top: 30px;
+    text-align: left;
+}
+
+#retroalimentacion h3 {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #4f46e5;
+}
+
+.retro-item {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border-left: 5px solid;
+}
+
+.retro-correcta {
+    background: #dcfce7;
+    border-color: #22c55e;
+}
+
+.retro-incorrecta {
+    background: #fee2e2;
+    border-color: #ef4444;
+}
+
+.retro-num {
+    font-weight: bold;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.retro-enunciado {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: #111827;
+}
+/* ========================= */
+/* 📝 CONTEXTO OPCIONES */
+/* ========================= */
+.contexto-opciones {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.contexto-opciones label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+#adm-contexto-texto {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    resize: vertical;
+}
