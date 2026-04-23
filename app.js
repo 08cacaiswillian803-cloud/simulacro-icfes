@@ -13,6 +13,7 @@ let areaSeleccionada = 1
 let tiempo = 0
 let intervalo = null
 let respuestas = [] // ✅ AÑADIR
+let campoActivo = null // ✅ AÑADIR AQUÍ
 
 // =======================
 // CAMBIO DE MODULOS
@@ -87,7 +88,6 @@ document.getElementById("mod-simulacro").innerHTML = `
 <button onclick="iniciarSimulacro(5)">Inglés</button>
 </div>
 
-<p id="stats"></p>
   <p id="stats"></p>
 <div id="barra-contenedor">
     <div id="barra-progreso"></div>
@@ -684,35 +684,43 @@ async function guardarNuevaPregunta() {
 }
 
 async function buscarPreguntaParaEditar() {
-    const id = document.getElementById("edit-id-buscar").value;
-    const contenedor = document.getElementById("contenedor-edicion");
+    const id = document.getElementById("edit-id-buscar").value
+    const contenedor = document.getElementById("contenedor-edicion")
 
-    if (!id) {
-        alert("⚠️ Ingresa un ID");
-        return;
-    }
+    if (!id) { alert("⚠️ Ingresa un ID"); return }
 
     try {
         const res = await fetch(`${API}/api/preguntas/${id}`)
-        const data = await res.json();
+        const data = await res.json()
 
-        if (!data) {
-            alert("❌ Pregunta no encontrada");
-            return;
+        if (!data) { alert("❌ Pregunta no encontrada"); return }
+
+        contenedor.style.display = "block"
+
+        // Cargar contexto
+        if (data.id_contexto) {
+            document.querySelector('input[name="tipo-contexto-edit"][value="existente"]').checked = true
+            cambiarTipoContextoEdit('existente')
+            document.getElementById("edit-contexto-id").value = data.id_contexto
+        } else {
+            document.querySelector('input[name="tipo-contexto-edit"][value="nuevo"]').checked = true
+            cambiarTipoContextoEdit('nuevo')
+            document.getElementById("edit-contexto-texto").value = ""
         }
 
-        contenedor.style.display = "block";
+        document.getElementById("edit-enunciado").value = data.enunciado || ""
+const ta = document.getElementById("edit-enunciado")
+ta.style.height = 'auto'
+ta.style.height = ta.scrollHeight + 'px'
+        document.getElementById("edit-a").value = data.opcion_a || ""
+        document.getElementById("edit-b").value = data.opcion_b || ""
+        document.getElementById("edit-c").value = data.opcion_c || ""
+        document.getElementById("edit-d").value = data.opcion_d || ""
+        document.getElementById("edit-correcta").value = data.respuesta_correcta || "A"
 
-        document.getElementById("edit-contexto").value = data.id_contexto || "";
-        document.getElementById("edit-enunciado").value = data.enunciado || "";
-        document.getElementById("edit-a").value = data.opcion_a || "";
-        document.getElementById("edit-b").value = data.opcion_b || "";
-        document.getElementById("edit-c").value = data.opcion_c || "";
-        document.getElementById("edit-d").value = data.opcion_d || "";
-        document.getElementById("edit-correcta").value = data.respuesta_correcta || "A";
+
     } catch (error) {
-        console.error(error);
-        alert("❌ Error al buscar la pregunta");
+        alert("❌ Error al buscar la pregunta")
     }
 }
 
@@ -725,7 +733,7 @@ async function actualizarPregunta() {
     }
 
     const data = {
-        id_contexto: document.getElementById("edit-contexto").value || null,
+        id_contexto: document.querySelector('input[name="tipo-contexto-edit"]:checked').value === "existente" ? document.getElementById("edit-contexto-id").value || null : null,
         enunciado: document.getElementById("edit-enunciado").value.trim(),
         opcion_a: document.getElementById("edit-a").value.trim(),
         opcion_b: document.getElementById("edit-b").value.trim(),
@@ -890,20 +898,157 @@ function insertarEnCursor(html) {
     textarea.selectionStart = textarea.selectionEnd = inicio + html.length
     textarea.focus()
 
-    // Actualizar preview
-    actualizarPreview()
+    
 }
 
-// Preview en tiempo real
-function actualizarPreview() {
-    const texto = document.getElementById("adm-enunciado").value
-    const preview = document.getElementById("preview-enunciado")
-    if (preview) preview.innerHTML = texto
-}
+
+
 // =======================
 // CONTEXTO
 // =======================
 function cambiarTipoContexto(tipo) {
     document.getElementById("div-contexto-nuevo").style.display = tipo === "nuevo" ? "block" : "none"
     document.getElementById("div-contexto-existente").style.display = tipo === "existente" ? "block" : "none"
+}
+// =======================
+// CONTEXTO EDITAR
+// =======================
+function cambiarTipoContextoEdit(tipo) {
+    document.getElementById("div-contexto-nuevo-edit").style.display = tipo === "nuevo" ? "block" : "none"
+    document.getElementById("div-contexto-existente-edit").style.display = tipo === "existente" ? "block" : "none"
+}
+
+function insertarImagenURLEdit() {
+    const enunciado = document.getElementById("edit-enunciado").value.trim()
+    if (!enunciado) {
+        alert("⚠️ Escribe el enunciado primero")
+        return
+    }
+    const url = prompt("Pega la URL de la imagen:")
+    if (!url) return
+    insertarEnCursorEdit(`<div style="text-align:center;margin:16px 0;"><img src="${url}" style="max-width:100%;border-radius:8px;"></div>`)
+}
+
+function insertarImagenArchivoEdit() {
+    const enunciado = document.getElementById("edit-enunciado").value.trim()
+    if (!enunciado) {
+        alert("⚠️ Escribe el enunciado primero")
+        return
+    }
+    document.getElementById("input-archivo-img-edit").click()
+}
+
+async function subirImagenEdit(input) {
+    const archivo = input.files[0]
+    if (!archivo) return
+    const formData = new FormData()
+    formData.append("imagen", archivo)
+    try {
+        const res = await fetch(`${API}/api/subir-imagen`, { method: "POST", body: formData })
+        const data = await res.json()
+        if (data.url) {
+            insertarEnCursorEdit(`<div style="text-align:center;margin:16px 0;"><img src="${data.url}" style="max-width:100%;border-radius:8px;"></div>`)
+        } else {
+            alert("❌ Error al subir la imagen")
+        }
+    } catch (e) {
+        alert("❌ Error de conexión")
+    }
+    input.value = ""
+}
+
+function insertarEnCursorEdit(html) {
+    const textarea = document.getElementById("edit-enunciado")
+    const inicio = textarea.selectionStart
+    const fin = textarea.selectionEnd
+    const texto = textarea.value
+    textarea.value = texto.substring(0, inicio) + html + texto.substring(fin)
+    textarea.selectionStart = textarea.selectionEnd = inicio + html.length
+    textarea.focus()
+    
+}
+
+
+function toggleEditor(header) {
+    header.classList.toggle("abierto")
+    const body = header.nextElementSibling
+    body.classList.toggle("abierto")
+}
+function autoCrecer(textarea) {
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
+    // ✅ AÑADIR ESTO JUSTO DESPUÉS
+document.addEventListener("focusin", (e) => {
+    const ids = ["adm-enunciado", "edit-enunciado", "adm-a", "adm-b", "adm-c", "adm-d", "edit-a", "edit-b", "edit-c", "edit-d", "adm-contexto-texto", "edit-contexto-texto"]
+    if (ids.includes(e.target.id)) {
+        campoActivo = e.target.id
+    }
+})
+
+}
+// =======================
+// PREVIEW ENUNCIADO
+// =======================
+function togglePreview(id) {
+    const preview = document.getElementById(id)
+    const textarea = id === 'preview-añadir' 
+        ? document.getElementById("adm-enunciado")
+        : document.getElementById("edit-enunciado")
+
+    if (preview.style.display === "none") {
+        preview.innerHTML = textarea.value
+        preview.style.display = "block"
+        // ✅ AÑADIR ESTO
+        if (window.MathJax) {
+            MathJax.typesetPromise([preview])
+        }
+    } else {
+        preview.style.display = "none"
+        preview.innerHTML = ""
+    }
+}
+// =======================
+// INSERTAR SÍMBOLO MATH
+// =======================
+function insertarMath(idTextarea, simbolo, cursorOffset) {
+    const id = campoActivo || idTextarea
+    const textarea = document.getElementById(id)
+    if (!textarea) return
+
+    const inicio = textarea.selectionStart
+    const fin = textarea.selectionEnd
+    const texto = textarea.value
+
+    textarea.value = texto.substring(0, inicio) + simbolo + texto.substring(fin)
+
+    const nuevaPos = cursorOffset > 0
+        ? inicio + cursorOffset
+        : inicio + simbolo.length
+
+    textarea.selectionStart = textarea.selectionEnd = nuevaPos
+    textarea.focus()
+    autoCrecer(textarea)
+}
+function togglePreviewOpciones(id) {
+    const preview = document.getElementById(id)
+    const esEditar = id.includes('editar')
+
+    const a = document.getElementById(esEditar ? "edit-a" : "adm-a").value
+    const b = document.getElementById(esEditar ? "edit-b" : "adm-b").value
+    const c = document.getElementById(esEditar ? "edit-c" : "adm-c").value
+    const d = document.getElementById(esEditar ? "edit-d" : "adm-d").value
+
+    if (preview.style.display === "none") {
+        preview.innerHTML = `
+            <p><strong>A.</strong> ${a}</p>
+            <p><strong>B.</strong> ${b}</p>
+            <p><strong>C.</strong> ${c}</p>
+            <p><strong>D.</strong> ${d}</p>
+        `
+        preview.style.display = "block"
+        if (window.MathJax) MathJax.typesetPromise([preview])
+    } else {
+        preview.style.display = "none"
+        preview.innerHTML = ""
+    }
 }

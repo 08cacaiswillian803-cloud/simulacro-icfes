@@ -1,626 +1,117 @@
 /* ========================= */
+/* 🌐 VARIABLES GLOBALES */
+/* ========================= */
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #eef2ff;
+    --primary-mid: #e0e7ff;
+    --success: #22c55e;
+    --success-bg: #dcfce7;
+    --danger: #ef4444;
+    --danger-bg: #fee2e2;
+    --danger-dark: #dc2626;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 6px 18px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --font: 'Segoe UI', Arial, sans-serif;
+}
+
+/* ========================= */
 /* 🌐 BODY */
 /* ========================= */
-body{
-    font-family: 'Segoe UI', Arial, sans-serif;
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font);
     background: linear-gradient(135deg, #eef2ff, #f8fafc);
-    display:flex;
-    margin:0;
-    min-height:100vh;
-    color:#111;
-}
-/* ========================= */
-/* 🔐 LOGIN */
-/* ========================= */
-
-#auth{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#f8fafc;
-
-    display:flex; /* 👈 IMPORTANTE: visible por defecto */
-
-    justify-content:center;
-    align-items:center;
-    z-index:1000;
-}
-
-#auth.hidden{
-    display:none; /* 👈 lo ocultamos con clase, no directo */
-}
-
-#auth-box{
-    background:white;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
-    width:300px;
-    text-align:center;
-}
-
-#auth-box input{
-    width:100%;
-    margin:10px 0;
-    padding:12px;
-    border-radius:8px;
-    border:1px solid #ddd;
-}
-
-#auth-box button{
-    width:100%;
-    margin-top:10px;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:#4f46e5;
-    color:white;
-    cursor:pointer;
-}
-
-#auth-box button:hover{
-    background:#4338ca;
-}
-#sidebar{
-    width:180px;
-    background:white;
-    padding:20px;
-    box-shadow:2px 0 10px rgba(0,0,0,0.05);
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    /* Clase para resaltar el botón del módulo activo */
-
-}
-.btn-active {
-    background: #4f46e5 !important;
-    color: white !important;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
-}
-
-#sidebar button{
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#e0e7ff;
-    cursor:pointer;
-    font-weight:bold;
-    transition:0.2s;
-}
-
-#sidebar button:hover{
-    background:#c7d2fe;
-}
-
-/* ========================= */
-/* 📦 CONTENEDOR PRINCIPAL */
-/* ========================= */
-#app{
-    background:white;
-    width:100%;
-    max-width:900px;
-    margin:auto;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.08);
-    animation:fadeIn 0.5s ease;
-}
-
-/* ========================= */
-/* 🧠 CONTENIDO */
-/* ========================= */
-#contenido{
-    width:100%;
-}
-
-/* ========================= */
-/* 🔤 TITULOS */
-/* ========================= */
-h2{
-    text-align:center;
-    margin-bottom:20px;
-    color:#4f46e5;
-}
-
-h3{
-    color:#374151;
-}
-
-/* ========================= */
-/* 📚 MODULOS */
-/* ========================= */
-.modulo{
-    border-top:2px solid #e5e7eb;
-    padding-top:20px;
-    margin-top:20px;
-    animation:fadeIn 0.3s ease;
-}
-
-/* ========================= */
-/* 🎯 MENU SIMULACRO */
-/* ========================= */
-#menu{
-    text-align:center;
-}
-
-#menu button{
-    margin:8px;
-    padding:12px 20px;
-    border:none;
-    border-radius:10px;
-    background:#4f46e5;
-    color:white;
-    cursor:pointer;
-    font-weight:bold;
-    transition:0.3s;
-}
-
-#menu button:hover{
-    background:#4338ca;
-    transform:scale(1.05);
-}
-
-/* ========================= */
-/* 📝 ENUNCIADO */
-/* ========================= */
-#enunciado{
-    font-size:18px;
-    margin:20px 0;
-    line-height:1.6;
-    color:#111827;
-}
-
-/* ========================= */
-/* 🔘 OPCIONES */
-/* ========================= */
-.opcion{
-    display:block;
-    width:100%;
-    margin:10px 0;
-    padding:15px;
-    border:2px solid #e5e7eb;
-    border-radius:10px;
-    cursor:pointer;
-    background:white;
-    text-align:left;
-    font-size:16px;
-    transition:0.2s;
-     touch-action: manipulation;
-}
-
-.opcion:hover{
-    background:#f9fafb;
-    transform:scale(1.02);
-}
-
-/* ========================= */
-/* ✅ ESTADOS */
-/* ========================= */
-.selected{
-    border-color:#4f46e5;
-    background:#eef2ff;
-}
-
-.correcta{
-    border-color:#22c55e;
-    background:#dcfce7;
-}
-
-.incorrecta{
-    border-color:#ef4444;
-    background:#fee2e2;
-}
-
-/* ========================= */
-/* ▶ BOTON SIGUIENTE */
-/* ========================= */
-#btn{
-    padding:15px;
-    margin-top:20px;
-    width:100%;
-    background:#4f46e5;
-    color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:bold;
-    transition:0.3s;
-}
-
-#btn:hover{
-    background:#4338ca;
-}
-
-/* ========================= */
-/* ⏱ STATS */
-/* ========================= */
-#stats, #tiempo{
-    text-align:center;
-    font-weight:bold;
-    margin:10px 0;
-    color:#374151;
-}
-
-/* ========================= */
-/* ✨ ANIMACION */
-/* ========================= */
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-/* ========================= */
-/* 🔄 BOTONES DE RESULTADO */
-/* ========================= */
-.btn-final {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-    margin-top: 12px;
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* Botón principal (Reintentar) */
-.btn-reintentar {
-    background: #4f46e5;
-    color: white;
-    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-}
-
-.btn-reintentar:hover {
-    background: #4338ca;
-    transform: translateY(-2px);
-}
-
-/* Botón secundario (Otras áreas) */
-.btn-volver {
-    background: #f3f4f6;
-    color: #4b5563;
-    border: 1px solid #e5e7eb;
-}
-
-.btn-volver:hover {
-    background: #e5e7eb;
-    color: #1f2937;
-}
-.resultado-container {
-    text-align: center;
-    padding: 20px;
-}
-
-.puntaje-circulo {
-    font-size: 50px;
-    font-weight: 800;
-    color: #4f46e5;
-    margin: 15px 0;
-}
-/* ========================= */
-/* 📱 MODO MOVIL */
-/* ========================= */
-@media (max-width: 768px){
-
-/* Layout vertical */
-body{
-    flex-direction: column;
-}
-
-/* Sidebar arriba tipo barra */
-#sidebar{
-    width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 10px;
-    gap: 8px;
-}
-
-/* Botones del sidebar más pequeños */
-#sidebar button{
-    flex: 1;
-    min-width: 120px;
-    font-size: 14px;
-    padding: 10px;
-}
-
-/* Contenedor principal */
-#app{
     margin: 0;
-    border-radius: 0;
-    padding: 20px;
+    min-height: 100vh;
+    color: var(--gray-900);
 }
 
-/* Texto más compacto */
-h2{
-    font-size: 20px;
+/* ========================= */
+/* 🔐 LOGIN / AUTH */
+/* ========================= */
+#auth {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-h3{
-    font-size: 18px;
+#auth.hidden {
+    display: none;
 }
 
-/* Botones de áreas */
-#menu button{
+#auth-box {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 320px;
+    text-align: center;
+}
+
+#auth-box input {
     width: 100%;
     margin: 8px 0;
-}
-
-/* Opciones tipo examen (MUY IMPORTANTE) */
-.opcion{
-    font-size: 15px;
-    padding: 14px;
-}
-
-/* Botón siguiente grande */
-#btn{
-    font-size: 18px;
-    padding: 16px;
-}
-
-/* Resultado */
-.botones-resultado{
-    flex-direction: column;
-}
-
-/* Botones grandes para dedo */
-.btn-final{
-    width: 100%;
-    font-size: 16px;
-    padding: 16px;
-}
-
-/* Scroll para preguntas largas */
-#contenido{
-    max-height: 75vh;
-    overflow-y: auto;
-}
-
-}
-
-/* ========================= */
-/* 🛠️ ADMIN PANEL */
-/* ========================= */
-
-/* Tabs */
-.admin-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.tab-btn {
-    flex: 1;
     padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: #e5e7eb;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.tab-btn:hover {
-    background: #d1d5db;
-}
-
-.tab-btn.active {
-    background: #4f46e5;
-    color: white;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
-}
-
-/* Contenido */
-.tab-content {
-    animation: fadeIn 0.3s ease;
-}
-
-/* Formulario */
-.admin-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: #f9fafb;
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #e5e7eb;
-}
-
-/* Inputs */
-.admin-form input,
-.admin-form select,
-.admin-form textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    font-family: var(--font);
     font-size: 14px;
-    transition: 0.2s;
-}
-
-.admin-form textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.admin-form input:focus,
-.admin-form select:focus,
-.admin-form textarea:focus {
-    outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-/* Botones */
-.admin-form button {
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    background: #4f46e5;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.admin-form button:hover {
-    background: #4338ca;
-    transform: translateY(-1px);
-}
-
-/* Botón eliminar */
-#tab-eliminar button {
-    background: #ef4444;
-}
-
-#tab-eliminar button:hover {
-    background: #dc2626;
-}
-
-/* Contenedor edición */
-#contenedor-edicion {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-}
-
-/* Mensajes */
-#admin-msg {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 10px;
-}
-/* ========================= */
-/* 🛠️ ADMIN - EDITAR Y ELIMINAR */
-/* ========================= */
-
-/* Caja general de editar / eliminar */
-#tab-editar .admin-form,
-#tab-eliminar .admin-form {
-    background: #f9fafb;
-    padding: 20px;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-/* Labels */
-#tab-editar label,
-#tab-eliminar label {
-    font-weight: 700;
-    color: #374151;
-    font-size: 14px;
-}
-
-/* Inputs, textarea y select dentro de editar/eliminar */
-#tab-editar input,
-#tab-editar textarea,
-#tab-editar select,
-#tab-eliminar input,
-#tab-eliminar textarea,
-#tab-eliminar select {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #d1d5db;
-    background: #fff;
-    font-size: 15px;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#tab-editar input:focus,
-#tab-editar textarea:focus,
-#tab-editar select:focus,
-#tab-eliminar input:focus,
-#tab-eliminar textarea:focus,
-#tab-eliminar select:focus {
+#auth-box input:focus {
     outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
 }
 
-/* Área de búsqueda en editar */
-#tab-editar > .admin-form > div {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* Botón buscar */
-#tab-editar button {
-    padding: 12px 16px;
+#auth-box button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
     border: none;
-    border-radius: 10px;
-    background: #4f46e5;
-    color: white;
+    border-radius: var(--radius-sm);
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.25s;
+    transition: background 0.2s;
 }
 
-#tab-editar button:hover {
-    background: #4338ca;
-    transform: translateY(-1px);
+#auth-box button:hover {
+    background: var(--primary-dark);
 }
 
-/* Botón guardar cambios */
-#contenedor-edicion button {
-    background: #4f46e5;
-    color: white;
-}
-
-#contenedor-edicion button:hover {
-    background: #4338ca;
-}
-
-/* Botón eliminar */
-#tab-eliminar button {
-    padding: 14px 16px;
-    border: none;
-    border-radius: 10px;
-    background: #ef4444;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s;
-}
-
-#tab-eliminar button:hover {
-    background: #dc2626;
-    transform: translateY(-1px);
-}
-
-/* Contenedor edición */
-#contenedor-edicion {
-    background: #ffffff;
-    border-top: 1px solid #e5e7eb;
-    padding-top: 15px;
-    margin-top: 15px;
-    display: none;
-    gap: 12px;
-}
-
-/* Grid de opciones dentro de editar */
-#contenedor-edicion .grid-opciones {
-    margin-top: 5px;
-}
 /* ========================= */
 /* 🔐 AUTH TABS */
 /* ========================= */
@@ -634,43 +125,179 @@ h3{
     flex: 1;
     padding: 10px;
     border: none;
-    border-radius: 8px;
-    background: #e0e7ff;
+    border-radius: var(--radius-sm);
+    background: var(--primary-mid);
+    font-family: var(--font);
     font-weight: bold;
+    font-size: 14px;
     cursor: pointer;
     transition: 0.2s;
 }
 
 .auth-tab.active {
-    background: #4f46e5;
-    color: white;
+    background: var(--primary);
+    color: var(--white);
 }
 
-.auth-tab:hover {
+.auth-tab:hover:not(.active) {
     background: #c7d2fe;
 }
+
+/* ========================= */
+/* 📌 SIDEBAR */
+/* ========================= */
+#sidebar {
+    width: 180px;
+    min-height: 100vh;
+    background: var(--white);
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#sidebar button {
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--primary-mid);
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    text-align: left;
+}
+
+#sidebar button:hover {
+    background: #c7d2fe;
+}
+
+.btn-active {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+    box-shadow: 0 4px 10px rgba(79,70,229,0.2);
+}
+
 /* ========================= */
 /* 🚪 CERRAR SESIÓN */
 /* ========================= */
 #btn-logout {
-    background: #fee2e2 !important;
-    color: #ef4444 !important;
+    background: var(--danger-bg) !important;
+    color: var(--danger) !important;
     margin-top: auto;
 }
 
 #btn-logout:hover {
     background: #fecaca !important;
 }
+
+/* ========================= */
+/* 📦 CONTENEDOR PRINCIPAL */
+/* ========================= */
+#app {
+    background: var(--white);
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    animation: fadeIn 0.5s ease;
+}
+
+/* ========================= */
+/* 🧠 CONTENIDO */
+/* ========================= */
+#contenido {
+    width: 100%;
+}
+
+/* ========================= */
+/* 🔤 TÍTULOS */
+/* ========================= */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+h3 {
+    color: var(--gray-700);
+}
+
+/* ========================= */
+/* 📚 MÓDULOS */
+/* ========================= */
+.modulo {
+    border-top: 2px solid var(--gray-200);
+    padding-top: 20px;
+    margin-top: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ========================= */
+/* 🎯 MENÚ SIMULACRO */
+/* ========================= */
+#menu {
+    text-align: center;
+}
+
+#menu button {
+    margin: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--primary);
+    color: var(--white);
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+#menu button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+/* ========================= */
+/* 📝 ENUNCIADO */
+/* ========================= */
+#enunciado {
+    font-size: 18px;
+    margin: 20px 0;
+    line-height: 1.6;
+    color: var(--gray-900);
+}
+
+/* ========================= */
+/* 🖼️ IMÁGENES EN ENUNCIADO Y CONTEXTO */
+/* ========================= */
+#enunciado img, #contexto img {
+    display: block;
+    margin: 20px auto;
+    max-width: 80%;
+    width: auto;
+    height: auto;
+    min-width: 300px;
+    border-radius: var(--radius-sm);
+    cursor: zoom-in;
+    transition: 0.2s;
+}
+
+@media (max-width: 768px) {
+    #enunciado img, #contexto img {
+        min-width: unset;
+        max-width: 100%;
+    }
+}
+
 /* ========================= */
 /* 🔍 ZOOM DE IMÁGENES */
 /* ========================= */
-#enunciado img, #contexto img {
-    cursor: zoom-in;
-    transition: 0.2s;
-    border-radius: 8px;
-}
-
-/* Overlay oscuro de fondo */
 #zoom-overlay {
     display: none;
     position: fixed;
@@ -692,37 +319,92 @@ h3{
 #zoom-overlay img {
     max-width: 90vw;
     max-height: 90vh;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     animation: fadeIn 0.2s ease;
 }
+
 /* ========================= */
-/* 🖼️ IMÁGENES EN ENUNCIADO */
+/* 🔘 OPCIONES */
 /* ========================= */
-#enunciado img, #contexto img {
+.opcion {
     display: block;
-    margin: 20px auto;
-    max-width: 80%;
-    width: auto;
-    height: auto;
-    min-width: 400px;
-    border-radius: 8px;
-    cursor: zoom-in;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: var(--white);
+    text-align: left;
+    font-family: var(--font);
+    font-size: 16px;
+    transition: 0.2s;
+    touch-action: manipulation;
 }
 
-@media (max-width: 768px) {
-    #enunciado img, #contexto img {
-        min-width: unset;
-        max-width: 100%;
-    }
+.opcion:hover {
+    background: var(--gray-50);
+    transform: scale(1.02);
 }
+
+/* ========================= */
+/* ✅ ESTADOS DE OPCIONES */
+/* ========================= */
+.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.correcta {
+    border-color: var(--success);
+    background: var(--success-bg);
+}
+
+.incorrecta {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+}
+
+/* ========================= */
+/* ▶ BOTÓN SIGUIENTE */
+/* ========================= */
+#btn {
+    padding: 15px;
+    margin-top: 20px;
+    width: 100%;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+#btn:hover {
+    background: var(--primary-dark);
+}
+
+/* ========================= */
+/* ⏱ STATS Y TIEMPO */
+/* ========================= */
+#stats, #tiempo {
+    text-align: center;
+    font-weight: bold;
+    margin: 10px 0;
+    color: var(--gray-700);
+}
+
 /* ========================= */
 /* 📊 BARRA DE PROGRESO */
 /* ========================= */
 #barra-contenedor {
     width: 100%;
-    background: #e5e7eb;
-    border-radius: 10px;
+    background: var(--gray-200);
+    border-radius: var(--radius-md);
     height: 10px;
     margin: 8px 0 16px 0;
     overflow: hidden;
@@ -730,11 +412,60 @@ h3{
 
 #barra-progreso {
     height: 10px;
-    background: #4f46e5;
-    border-radius: 10px;
+    background: var(--primary);
+    border-radius: var(--radius-md);
     transition: width 0.4s ease;
     width: 0%;
 }
+
+/* ========================= */
+/* 🔄 BOTONES DE RESULTADO */
+/* ========================= */
+.botones-resultado {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.btn-final {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reintentar {
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(79,70,229,0.3);
+}
+
+.btn-reintentar:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-volver {
+    background: var(--gray-100);
+    color: var(--gray-500);
+    border: 1px solid var(--gray-200);
+}
+
+.btn-volver:hover {
+    background: var(--gray-200);
+    color: var(--gray-800);
+}
+
 /* ========================= */
 /* 📋 RETROALIMENTACIÓN */
 /* ========================= */
@@ -746,38 +477,247 @@ h3{
 #retroalimentacion h3 {
     text-align: center;
     margin-bottom: 16px;
-    color: #4f46e5;
+    color: var(--primary);
 }
 
 .retro-item {
     padding: 16px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     margin-bottom: 12px;
     border-left: 5px solid;
 }
 
 .retro-correcta {
-    background: #dcfce7;
-    border-color: #22c55e;
+    background: var(--success-bg);
+    border-color: var(--success);
 }
 
 .retro-incorrecta {
-    background: #fee2e2;
-    border-color: #ef4444;
+    background: var(--danger-bg);
+    border-color: var(--danger);
 }
 
 .retro-num {
     font-weight: bold;
     font-size: 13px;
-    color: #6b7280;
+    color: var(--gray-500);
     margin-bottom: 4px;
 }
 
 .retro-enunciado {
     font-size: 15px;
     margin-bottom: 8px;
-    color: #111827;
+    color: var(--gray-900);
 }
+
+/* ========================= */
+/* ✨ ANIMACIÓN */
+/* ========================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================= */
+/* 🛠️ ADMIN PANEL — TABS */
+/* ========================= */
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--gray-200);
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.tab-btn:hover {
+    background: var(--gray-300);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: 0 4px 10px rgba(79,70,229,0.2);
+}
+
+/* ========================= */
+/* 🛠️ ADMIN PANEL — FORMULARIO */
+/* ========================= */
+.tab-content {
+    animation: fadeIn 0.3s ease;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--gray-50);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--gray-200);
+    width: 100%;
+}
+
+/* Inputs, selects y textareas — MISMO ESTILO en todo el admin */
+.admin-form input,
+.admin-form select,
+.admin-form textarea,
+#tab-editar input,
+#tab-editar select,
+#tab-editar textarea,
+#contenedor-edicion input,
+#contenedor-edicion select,
+#contenedor-edicion textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--gray-900);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus,
+#tab-editar input:focus,
+#tab-editar select:focus,
+#tab-editar textarea:focus,
+#contenedor-edicion input:focus,
+#contenedor-edicion select:focus,
+#contenedor-edicion textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+
+/* Botones del admin — MISMO ESTILO */
+.admin-form button,
+#contenedor-edicion button {
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.admin-form button:hover,
+#contenedor-edicion button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Botón eliminar */
+#tab-eliminar button {
+    background: var(--danger);
+}
+
+#tab-eliminar button:hover {
+    background: var(--danger-dark);
+}
+
+/* Mensajes */
+#admin-msg, #edit-msg {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* ========================= */
+/* 🛠️ ADMIN — CONTENEDOR EDICIÓN */
+/* ========================= */
+#contenedor-edicion {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+    width: 100%;
+}
+
+/* Input buscar en editar */
+#tab-editar > input,
+#tab-editar > button {
+    margin-bottom: 8px;
+}
+
+/* ========================= */
+/* 📝 EDITOR COLAPSABLE */
+/* ========================= */
+.editor-seccion {
+    width: 100%;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--gray-700);
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.editor-header:hover {
+    background: var(--gray-100);
+}
+
+.editor-header span.flecha {
+    font-size: 12px;
+    transition: transform 0.2s;
+}
+
+.editor-header.abierto span.flecha {
+    transform: rotate(180deg);
+}
+
+.editor-body {
+    display: none;
+    padding: 12px;
+    border-top: 1px solid var(--gray-200);
+    width: 100%;
+}
+
+.editor-body.abierto {
+    display: block;
+}
+
 /* ========================= */
 /* 📝 CONTEXTO OPCIONES */
 /* ========================= */
@@ -785,7 +725,7 @@ h3{
     display: flex;
     gap: 20px;
     font-size: 14px;
-    color: var(--color-text-secondary);
+    margin-bottom: 10px;
 }
 
 .contexto-opciones label {
@@ -793,14 +733,335 @@ h3{
     align-items: center;
     gap: 6px;
     cursor: pointer;
+    font-family: var(--font);
+    font-weight: normal;
+    font-size: 14px;
+    color: var(--gray-700);
 }
 
-#adm-contexto-texto {
+/* ========================= */
+/* 📝 TEXTAREAS DEL EDITOR */
+/* ========================= */
+#adm-enunciado,
+#edit-enunciado,
+#adm-contexto-texto,
+#edit-contexto-texto {
     width: 100%;
-    min-height: 80px;
+    min-height: 120px;
     padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    font-family: var(--font);
     font-size: 14px;
-    resize: vertical;
+    font-weight: normal;
+    color: var(--gray-900);
+    resize: none;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#adm-enunciado:focus,
+#edit-enunciado:focus,
+#adm-contexto-texto:focus,
+#edit-contexto-texto:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+
+/* ========================= */
+/* 🖼️ TOOLBAR DE IMÁGENES */
+/* ========================= */
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.editor-toolbar > button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: auto;
+}
+
+.editor-toolbar > button:hover {
+    background: var(--primary-dark);
+}
+
+/* Separador visual entre imagen y math */
+.math-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    border-left: 2px solid var(--gray-200);
+    padding-left: 8px;
+}
+
+/* ========================= */
+/* 📱 MODO MÓVIL */
+/* ========================= */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        width: 100%;
+        min-height: unset;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 10px;
+        gap: 8px;
+    }
+
+    #sidebar button {
+        flex: 1;
+        min-width: 100px;
+        font-size: 13px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    #app {
+        margin: 0;
+        border-radius: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    #menu button {
+        width: 100%;
+        margin: 8px 0;
+    }
+
+    .opcion {
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    #btn {
+        font-size: 18px;
+        padding: 16px;
+    }
+
+    .botones-resultado {
+        flex-direction: column;
+    }
+
+    .btn-final {
+        width: 100%;
+        font-size: 16px;
+        padding: 16px;
+    }
+
+    #contenido {
+        max-height: 75vh;
+        overflow-y: auto;
+    }
+
+    .admin-tabs {
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        flex: 1;
+        min-width: 80px;
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+#contenedor-edicion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+/* ========================= */
+/* 🛠️ ADMIN — BOTONES SUELTOS */
+/* ========================= */
+
+/* Botón buscar en editar */
+#tab-editar > button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 12px;
+}
+
+#tab-editar > button:hover {
+    background: var(--primary-dark);
+}
+
+/* Botón guardar cambios */
+#contenedor-edicion > button {
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+    margin-top: 8px;
+}
+
+#contenedor-edicion > button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Botón e input eliminar */
+#tab-eliminar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    background: var(--gray-50);
+    border-radius: 15px;
+    border: 1px solid var(--gray-200);
+}
+
+#tab-eliminar input {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    font-family: var(--font);
+    font-size: 14px;
+}
+
+#tab-eliminar button {
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--danger);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+}
+
+#tab-eliminar button:hover {
+    background: var(--danger-dark);
+    transform: translateY(-1px);
+}
+/* ========================= */
+/* 👁️ PREVIEW ENUNCIADO */
+/* ========================= */
+.preview-enunciado {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    background: var(--gray-50);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gray-900);
+}
+
+.preview-enunciado img {
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+    margin: 12px auto;
+    display: block;
+}
+/* Botón ver preview */
+.editor-body button[onclick*="togglePreview"] {
+    padding: 8px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--gray-200);
+    color: var(--gray-700);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: auto;
+    margin-top: 8px;
+}
+
+.editor-body button[onclick*="togglePreview"]:hover {
+    background: var(--gray-300);
+}
+/* ========================= */
+/* 🧮 MATH TOOLBAR */
+/* ========================= */
+.math-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+    width: 100%;
+}
+
+.math-toolbar button {
+    padding: 6px 10px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--gray-700);
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    width: auto !important;
+}
+
+.math-toolbar button:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+/* ========================= */
+/* 💡 MATH TIP */
+/* ========================= */
+.math-tip {
+    font-size: 13px;
+    color: var(--gray-500);
+    background: var(--primary-light);
+    border-left: 3px solid var(--primary);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+}
+
+.math-tip code {
+    background: var(--white);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--primary);
+    border: 1px solid var(--gray-200);
 }
